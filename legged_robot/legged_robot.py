@@ -128,11 +128,13 @@ class LeggedRobot(BaseTask):
             adds each terms to the episode sums and to the total reward
         """
         self.rew_buf[:] = 0.
-        for i in range(len(self.reward_functions)):
+        #计算奖励值的和
+        for i in range(len(self.reward_functions)):     #self.reward_function中是
             name = self.reward_names[i]
             rew = self.reward_functions[i]() * self.reward_scales[name]
             self.rew_buf += rew
             self.episode_sums[name] += rew
+        #只取奖励不去惩罚
         if self.cfg.rewards.only_positive_rewards:
             self.rew_buf[:] = torch.clip(self.rew_buf[:], min=0.)
         # add termination reward after clipping
@@ -149,6 +151,7 @@ class LeggedRobot(BaseTask):
         #时间步为仿真器最小时间单元乘采样率。目前decimation默认值为4
         self.dt = self.cfg.control.decimation * self.sim_params.dt
         self.obs_scales = self.cfg.normalization.obs_scales
+        #从cfg中读取奖励值项名称
         self.reward_scales = class_to_dict(self.cfg.rewards.scales)
         self.command_ranges = class_to_dict(self.cfg.commands.ranges)        
         #地形配置
@@ -218,21 +221,30 @@ class LeggedRobot(BaseTask):
         self.base_ang_vel = quat_rotate_inverse(self.base_quat, self.root_states[:, 10:13])
         self.projected_gravity = quat_rotate_inverse(self.base_quat, self.gravity_vec)
         self.gravity_vec = to_torch(get_axis_params(-1., self.up_axis_idx), device=self.device).repeat((self.num_envs, 1))
-
+        self.commands = torch.zeros(self.num_envs, self.cfg.commands.num_commands, dtype=torch.float, device=self.device, requires_grad=False) # x vel, y vel, yaw vel, heading
+        self.commands_scale = torch.tensor([self.obs_scales.lin_vel, self.obs_scales.lin_vel, self.obs_scales.ang_vel], device=self.device, requires_grad=False,) # TODO change this
+   
+   
+   
     def _prepare_reward_function(self):
-        """ Prepares a list of reward functions, whcih will be called to compute the total reward.
-            Looks for self._reward_<REWARD_NAME>, where <REWARD_NAME> are names of all non zero reward scales in the cfg.
+        """ 准备奖励函数列表并计算奖励值
         """
-        # remove zero scales + multiply non-zero ones by dt
+        # 去除值为0的项，对值不为零的项乘以dt做归一
         for key in list(self.reward_scales.keys()):
             scale = self.reward_scales[key]
             if scale==0:
                 self.reward_scales.pop(key) 
             else:
+                #需要乘单位时间以
                 self.reward_scales[key] *= self.dt
-        # prepare list of functions
+
+        # 准备奖励列表，不包括终止项
         self.reward_functions = []
         self.reward_names = []
+
+        #最终在self.reward_function中得到的就是从上个buffer中获取的观测值所计算出来的各奖励项的值
+        #各项奖励值在_reward_+name中有具体计算
+        #在self.reward_functions.append(getattr(self, name))拾取值并加入列表
         for name, scale in self.reward_scales.items():
             if name=="termination":
                 continue
@@ -240,7 +252,7 @@ class LeggedRobot(BaseTask):
             name = '_reward_' + name
             self.reward_functions.append(getattr(self, name))
 
-        # reward episode sums
+        # 对每个步长的奖励值求和
         self.episode_sums = {name: torch.zeros(self.num_envs, dtype=torch.float, device=self.device, requires_grad=False)
                              for name in self.reward_scales.keys()}
     
@@ -267,7 +279,7 @@ class LeggedRobot(BaseTask):
         """ 需要在计算观察值，奖励和结束条件之前调用
             Default behaviour: Compute ang vel command based on target and heading, compute measured terrain heights and randomly push robots
         """
-        # 
+        # 判断哪些环境需要重采样。当前步长数可被整除的参与重采样？
         env_ids = (self.episode_length_buf % int(self.cfg.commands.resampling_time / self.dt)==0).nonzero(as_tuple=False).flatten()
         self._resample_commands(env_ids)
         if self.cfg.commands.heading_command:
@@ -282,7 +294,7 @@ class LeggedRobot(BaseTask):
 
     def _resample_commands(self, env_ids):
         """ Randommly select commands of some environments
-
+            重采样主要指对当前机器人的速度和方向进行随机化
         Args:
             env_ids (List[int]): Environments ids for which new commands are needed
         """
@@ -295,3 +307,100 @@ class LeggedRobot(BaseTask):
 
         # set small commands to zero
         self.commands[env_ids, :2] *= (torch.norm(self.commands[env_ids, :2], dim=1) > 0.2).unsqueeze(1)
+
+
+
+
+#reward---------------------------------
+
+    def _reward_lin_vel_z(self):
+        # Penalize z axis base linear velocity
+        return torch.square(self.base_lin_vel[:, 2])
+    
+    def _reward_ang_vel_xy(self):
+        # Penalize xy axes base angular velocity
+        return torch.sum(torch.square(self.base_ang_vel[:, :2]), dim=1)
+    
+    def _reward_orientation(self):
+        # Penalize non flat base orientation
+        return torch.sum(torch.square(self.projected_gravity[:, :2]), dim=1)
+
+    def _reward_base_height(self):
+        # Penalize base height away from target
+        base_height = torch.mean(self.root_states[:, 2].unsqueeze(1) - self.measured_heights, dim=1)
+        return torch.square(base_height - self.cfg.rewards.base_height_target)
+    
+    def _reward_torques(self):
+        # Penalize torques
+        return torch.sum(torch.square(self.torques), dim=1)
+
+    def _reward_dof_vel(self):
+        # Penalize dof velocities
+        return torch.sum(torch.square(self.dof_vel), dim=1)
+    
+    def _reward_dof_acc(self):
+        # Penalize dof accelerations
+        return torch.sum(torch.square((self.last_dof_vel - self.dof_vel) / self.dt), dim=1)
+    
+    def _reward_action_rate(self):
+        # Penalize changes in actions
+        return torch.sum(torch.square(self.last_actions - self.actions), dim=1)
+    
+    def _reward_collision(self):
+        # Penalize collisions on selected bodies
+        return torch.sum(1.*(torch.norm(self.contact_forces[:, self.penalised_contact_indices, :], dim=-1) > 0.1), dim=1)
+    
+    def _reward_termination(self):
+        # Terminal reward / penalty
+        return self.reset_buf * ~self.time_out_buf
+    
+    def _reward_dof_pos_limits(self):
+        # Penalize dof positions too close to the limit
+        out_of_limits = -(self.dof_pos - self.dof_pos_limits[:, 0]).clip(max=0.) # lower limit
+        out_of_limits += (self.dof_pos - self.dof_pos_limits[:, 1]).clip(min=0.)
+        return torch.sum(out_of_limits, dim=1)
+
+    def _reward_dof_vel_limits(self):
+        # Penalize dof velocities too close to the limit
+        # clip to max error = 1 rad/s per joint to avoid huge penalties
+        return torch.sum((torch.abs(self.dof_vel) - self.dof_vel_limits*self.cfg.rewards.soft_dof_vel_limit).clip(min=0., max=1.), dim=1)
+
+    def _reward_torque_limits(self):
+        # penalize torques too close to the limit
+        return torch.sum((torch.abs(self.torques) - self.torque_limits*self.cfg.rewards.soft_torque_limit).clip(min=0.), dim=1)
+
+    def _reward_tracking_lin_vel(self):
+        # Tracking of linear velocity commands (xy axes)
+        lin_vel_error = torch.sum(torch.square(self.commands[:, :2] - self.base_lin_vel[:, :2]), dim=1)
+        return torch.exp(-lin_vel_error/self.cfg.rewards.tracking_sigma)
+    
+    def _reward_tracking_ang_vel(self):
+        # Tracking of angular velocity commands (yaw) 
+        ang_vel_error = torch.square(self.commands[:, 2] - self.base_ang_vel[:, 2])
+        return torch.exp(-ang_vel_error/self.cfg.rewards.tracking_sigma)
+
+    def _reward_feet_air_time(self):
+        # Reward long steps
+        # Need to filter the contacts because the contact reporting of PhysX is unreliable on meshes
+        contact = self.contact_forces[:, self.feet_indices, 2] > 1.
+        contact_filt = torch.logical_or(contact, self.last_contacts) 
+        self.last_contacts = contact
+        first_contact = (self.feet_air_time > 0.) * contact_filt
+        self.feet_air_time += self.dt
+        rew_airTime = torch.sum((self.feet_air_time - 0.5) * first_contact, dim=1) # reward only on first contact with the ground
+        rew_airTime *= torch.norm(self.commands[:, :2], dim=1) > 0.1 #no reward for zero command
+        self.feet_air_time *= ~contact_filt
+        return rew_airTime
+    
+    def _reward_stumble(self):
+        # Penalize feet hitting vertical surfaces
+        return torch.any(torch.norm(self.contact_forces[:, self.feet_indices, :2], dim=2) >\
+             5 *torch.abs(self.contact_forces[:, self.feet_indices, 2]), dim=1)
+        
+    def _reward_stand_still(self):
+        # Penalize motion at zero commands
+        return torch.sum(torch.abs(self.dof_pos - self.default_dof_pos), dim=1) * (torch.norm(self.commands[:, :2], dim=1) < 0.1)
+
+    def _reward_feet_contact_forces(self):
+        # penalize high contact forces
+        return torch.sum((torch.norm(self.contact_forces[:, self.feet_indices, :], dim=-1) -  self.cfg.rewards.max_contact_force).clip(min=0.), dim=1)
