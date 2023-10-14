@@ -1,0 +1,23 @@
+
+
+gym.prepare_sim()
+
+# acquire root state tensor descriptor
+_root_tensor = gym.acquire_actor_root_state_tensor(sim)
+
+# wrap it in a PyTorch Tensor and create convenient views
+root_tensor = gymtorch.wrap_tensor(_root_tensor)
+root_positions = root_tensor[:, 0:3]
+root_orientations = root_tensor[:, 3:7]
+root_linvels = root_tensor[:, 7:10]
+root_angvels = root_tensor[:, 10:13]
+
+# main simulation loop
+while True:
+    # step the physics simulation
+    gym.simulate(sim)
+
+    # refresh the state tensors
+    gym.refresh_actor_root_state_tensor(sim)
+
+    # ...use the latest state t
