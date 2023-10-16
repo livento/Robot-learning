@@ -186,10 +186,15 @@ def quat_rotate_inverse(q, v):
 ```
 gym.get_asset_dof_properties
 gym.get_asset_rigid_shape_properties
-
 ```
 
+```
+数据类型
+gymapi.Vec3
+gymapi.Transform
+```
 
+#### 4：callback中随机数设置
 
 ## 三：目前进度
 ### 2023.9.28 
