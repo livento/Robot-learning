@@ -26,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/base_link.STL" />
+          filename="../zongzhuangURDF/meshes/base_link.stl" />
       </geometry>
       <material
         name="">
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/base_link.STL" />
+          filename="../zongzhuangURDF/meshes/base_link.stl" />
       </geometry>
     </collision>
   </link>
@@ -66,7 +66,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R1.STL" />
+          filename="../zongzhuangURDF/meshes/R1.stl" />
       </geometry>
       <material
         name="">
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R1.STL" />
+          filename="../zongzhuangURDF/meshes/R1.stl" />
       </geometry>
     </collision>
   </link>
@@ -98,9 +98,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="R2">
@@ -124,7 +124,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R2.STL" />
+          filename="../zongzhuangURDF/meshes/R2.stl" />
       </geometry>
       <material
         name="">
@@ -138,7 +138,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R2.STL" />
+          filename="../zongzhuangURDF/meshes/R2.stl" />
       </geometry>
     </collision>
   </link>
@@ -156,9 +156,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="R3">
@@ -182,7 +182,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R3.STL" />
+          filename="../zongzhuangURDF/meshes/R3.stl" />
       </geometry>
       <material
         name="">
@@ -196,7 +196,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R3.STL" />
+          filename="../zongzhuangURDF/meshes/R3.stl" />
       </geometry>
     </collision>
   </link>
@@ -214,9 +214,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="R4">
@@ -240,7 +240,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R4.STL" />
+          filename="../zongzhuangURDF/meshes/R4.stl" />
       </geometry>
       <material
         name="">
@@ -254,7 +254,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R4.STL" />
+          filename="../zongzhuangURDF/meshes/R4.stl" />
       </geometry>
     </collision>
   </link>
@@ -272,9 +272,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="R5">
@@ -298,7 +298,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R5.STL" />
+          filename="../zongzhuangURDF/meshes/R5.stl" />
       </geometry>
       <material
         name="">
@@ -312,7 +312,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R5.STL" />
+          filename="../zongzhuangURDF/meshes/R5.stl" />
       </geometry>
     </collision>
   </link>
@@ -330,9 +330,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="R6">
@@ -356,7 +356,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R6.STL" />
+          filename="../zongzhuangURDF/meshes/R6.stl" />
       </geometry>
       <material
         name="">
@@ -370,7 +370,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/R6.STL" />
+          filename="../zongzhuangURDF/meshes/R6.stl" />
       </geometry>
     </collision>
   </link>
@@ -388,9 +388,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="L1">
@@ -414,7 +414,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L1.STL" />
+          filename="../zongzhuangURDF/meshes/L1.stl" />
       </geometry>
       <material
         name="">
@@ -428,7 +428,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L1.STL" />
+          filename="../zongzhuangURDF/meshes/L1.stl" />
       </geometry>
     </collision>
   </link>
@@ -446,9 +446,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="L2">
@@ -472,7 +472,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L2.STL" />
+          filename="../zongzhuangURDF/meshes/L2.stl" />
       </geometry>
       <material
         name="">
@@ -486,7 +486,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L2.STL" />
+          filename="../zongzhuangURDF/meshes/L2.stl" />
       </geometry>
     </collision>
   </link>
@@ -504,9 +504,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="L3">
@@ -530,7 +530,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L3.STL" />
+          filename="../zongzhuangURDF/meshes/L3.stl" />
       </geometry>
       <material
         name="">
@@ -544,7 +544,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L3.STL" />
+          filename="../zongzhuangURDF/meshes/L3.stl" />
       </geometry>
     </collision>
   </link>
@@ -562,9 +562,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="L4">
@@ -588,7 +588,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L4.STL" />
+          filename="../zongzhuangURDF/meshes/L4.stl" />
       </geometry>
       <material
         name="">
@@ -602,7 +602,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L4.STL" />
+          filename="../zongzhuangURDF/meshes/L4.stl" />
       </geometry>
     </collision>
   </link>
@@ -620,9 +620,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="L5">
@@ -646,7 +646,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L5.STL" />
+          filename="../zongzhuangURDF/meshes/L5.stl" />
       </geometry>
       <material
         name="">
@@ -660,7 +660,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L5.STL" />
+          filename="../zongzhuangURDF/meshes/L5.stl" />
       </geometry>
     </collision>
   </link>
@@ -678,9 +678,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
   <link
     name="L6">
@@ -704,7 +704,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L6.STL" />
+          filename="../zongzhuangURDF/meshes/L6.stl" />
       </geometry>
       <material
         name="">
@@ -718,7 +718,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://zongzhuangURDF/meshes/L6.STL" />
+          filename="../zongzhuangURDF/meshes/L6.stl" />
       </geometry>
     </collision>
   </link>
@@ -736,8 +736,8 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
 </robot>

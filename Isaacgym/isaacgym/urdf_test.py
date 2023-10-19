@@ -5,7 +5,8 @@ from isaacgym import gymutil
 import math
 import numpy as np
 from function import print_asset_info, print_actor_info
- 
+
+
 #设置仿真参数
 def set_sim_params(sim_params):
     #sim_params是在配置仿真环境的具体参数
@@ -29,7 +30,8 @@ def set_sim_params(sim_params):
     sim_params.flex.relaxation = 0.8
     sim_params.flex.warm_start = 0.5
     sim_params.up_axis = gymapi.UP_AXIS_Z
-    sim_params.gravity = gymapi.Vec3(0.0, 0.0, -9.8)
+    #sim_params.gravity = gymapi.Vec3(0.0, 0.0, -9.8)
+    sim_params.gravity = gymapi.Vec3(0.0, 0.0, 0)
 
 #设置地面参数
 def set_plane(plane_params):
@@ -40,9 +42,10 @@ def set_plane(plane_params):
     plane_params.restitution = 0         #地面弹性    
 
 #添加URDF路径
-asset_root = "./urdf"
-asset_file = "lm/urdf/lm.urdf"
-#asset_file = "cassie/urdf/cassie.urdf"
+asset_root = "/home/leovento/Robot-learning/urdf"
+#asset_file = "zongzhuangURDF3/urdf/zongzhuangURDF3.urdf"
+#asset_file = "lm2/urdf/lm2.urdf"
+asset_file = "cassie/urdf/cassie.urdf"
 
 gym = gymapi.acquire_gym()
 
@@ -94,9 +97,9 @@ for i in range(num_envs):
     height = random.uniform(1.0, 2.5)
 
     initial_pose = gymapi.Transform()
-    initial_pose.p = gymapi.Vec3(0.0, 0, 1.06)  #每个actor加入时的位置
+    initial_pose.p = gymapi.Vec3(0.0, 0, 2.06)  #每个actor加入时的位置
     #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
-    
+    #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
     #为每一个环境添加对象
     actor_handle = gym.create_actor(env, asset, initial_pose, "MyActor", i, 1)#i指的是碰撞组，只有在统一碰撞组的对象会碰撞，1是位掩码，用于过滤物体碰撞
     actor_handles.append(actor_handle)
@@ -105,8 +108,8 @@ for i in range(num_envs):
 
 #加入相机
 cam_props = gymapi.CameraProperties()
-cam_pos = gymapi.Vec3(17.2, 0, 4)
-cam_target = gymapi.Vec3(5, -0, 3)
+cam_pos = gymapi.Vec3(0, 1, 3)
+cam_target = gymapi.Vec3(0, 0, 2)
 viewer = gym.create_viewer(sim, cam_props)
 gym.viewer_camera_look_at(viewer, None, cam_pos, cam_target)
 
@@ -117,7 +120,7 @@ while not gym.query_viewer_has_closed(viewer):
     gym.step_graphics(sim)
     gym.draw_viewer(viewer, sim, True)
     gym.sync_frame_time(sim)
-    print_actor_info(gym,envs[0],actor_handles[0])
+    #print_actor_info(gym,envs[0],actor_handles[0])
 
 gym.destroy_viewer(viewer)
 gym.destroy_sim(sim)

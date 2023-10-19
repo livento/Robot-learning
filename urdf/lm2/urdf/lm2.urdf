@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" ?>
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="lm2">
+<robot name="lm2">
   <link
     name="base_link">
     <inertial>
@@ -26,7 +25,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://lm2/meshes/base_link.STL" />
+          filename="../meshes/base_link.stl" />
       </geometry>
       <material
         name="">
@@ -39,8 +38,7 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://lm2/meshes/base_link.STL" />
+        <sphere radius="0.25"/>
       </geometry>
     </collision>
   </link>
@@ -66,7 +64,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://lm2/meshes/Link1.STL" />
+          filename="../lm2/meshes/Link1.stl" />
       </geometry>
       <material
         name="">
@@ -80,7 +78,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://lm2/meshes/Link1.STL" />
+          filename="../lm2/meshes/Link1.stl" />
       </geometry>
     </collision>
   </link>
@@ -98,8 +96,8 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="100"
+      effort="100"
+      velocity="100" />
   </joint>
 </robot>
