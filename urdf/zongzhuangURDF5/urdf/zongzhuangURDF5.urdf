@@ -98,9 +98,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="R2">
@@ -147,7 +147,7 @@
     type="revolute">
     <origin
       xyz="0 0 0"
-      rpy="3.1416 -1.5708 0" />
+      rpy="0 -1.5708 0" />
     <parent
       link="R1" />
     <child
@@ -156,9 +156,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="R3">
@@ -214,9 +214,9 @@
       xyz="0 0 1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="R4">
@@ -272,9 +272,9 @@
       xyz="0 0 1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="R5">
@@ -330,9 +330,9 @@
       xyz="0 0 1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="R6">
@@ -388,9 +388,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="L1">
@@ -446,9 +446,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="L2">
@@ -495,7 +495,7 @@
     type="revolute">
     <origin
       xyz="0 0 0"
-      rpy="3.1416 -1.5708 0" />
+      rpy="0 -1.5708 0" />
     <parent
       link="L1" />
     <child
@@ -504,9 +504,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="L3">
@@ -562,9 +562,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="L4">
@@ -620,9 +620,9 @@
       xyz="0 0 1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="L5">
@@ -678,9 +678,9 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
   <link
     name="L6">
@@ -736,8 +736,8 @@
       xyz="0 0 -1" />
     <limit
       lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+      upper="3.1415926"
+      effort="1"
+      velocity="1" />
   </joint>
 </robot>

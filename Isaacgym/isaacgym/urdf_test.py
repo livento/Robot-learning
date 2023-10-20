@@ -30,8 +30,8 @@ def set_sim_params(sim_params):
     sim_params.flex.relaxation = 0.8
     sim_params.flex.warm_start = 0.5
     sim_params.up_axis = gymapi.UP_AXIS_Z
-    #sim_params.gravity = gymapi.Vec3(0.0, 0.0, -9.8)
-    sim_params.gravity = gymapi.Vec3(0.0, 0.0, 0)
+    sim_params.gravity = gymapi.Vec3(0.0, 0.0, -9.8)
+    #sim_params.gravity = gymapi.Vec3(0.0, 0.0, 0)
 
 #设置地面参数
 def set_plane(plane_params):
@@ -43,9 +43,9 @@ def set_plane(plane_params):
 
 #添加URDF路径
 asset_root = "/home/leovento/Robot-learning/urdf"
-#asset_file = "zongzhuangURDF3/urdf/zongzhuangURDF3.urdf"
+asset_file = "zongzhuangURDF5/urdf/zongzhuangURDF5.urdf"
 #asset_file = "lm2/urdf/lm2.urdf"
-asset_file = "cassie/urdf/cassie.urdf"
+#asset_file = "cassie/urdf/cassie.urdf"
 
 gym = gymapi.acquire_gym()
 
@@ -97,7 +97,7 @@ for i in range(num_envs):
     height = random.uniform(1.0, 2.5)
 
     initial_pose = gymapi.Transform()
-    initial_pose.p = gymapi.Vec3(0.0, 0, 2.06)  #每个actor加入时的位置
+    initial_pose.p = gymapi.Vec3(0.0, 0, 0)  #每个actor加入时的位置
     #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
     #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
     #为每一个环境添加对象
