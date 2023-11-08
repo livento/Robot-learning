@@ -1,5 +1,5 @@
 import roboticstoolbox as rtb
-robot = rtb.models.Panda()
+robot = rtb.models.Panda2()
 print(robot)
 Te = robot.fkine(robot.qr)  # forward kinematics
 print(Te)
@@ -11,4 +11,4 @@ print(sol)
 q_pickup = sol[0]
 print(robot.fkine(q_pickup))
 qt = rtb.jtraj(robot.qr, q_pickup, 50)
-robot.plot(qt.q, backend='pyplot', movie='panda1.gif')
+robot.plot(qt.q, backend='pyplot', movie='panda2.gif')
