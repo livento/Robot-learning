@@ -91,7 +91,53 @@ def print_actor_info(gym, env, actor_handle):
     print(dof_states)
     print()
 
+    f = open('DOF.txt','w')
     # iterate through DOFs and print name and position
     dof_positions = dof_states['pos']
     for i in range(len(dof_names)):
         print("DOF '%s' has position" % dof_names[i], dof_positions[i])
+        for i in range(len(dof_names)):
+            f.write(dof_names[i])
+            f.write(' ')
+            f.write(str(dof_positions[i]))
+            f.write('\n')
+    
+    mass = {
+        "base_link":9.51755992218181,
+        "R1":1.51779481990376,
+        "R2":3.59389626425694,
+        "R3":3.65910111444716,
+        "R4":2.85321169527239,
+        "R5":0.113692025844553,
+        "R6":2.40125862032741,
+        "L1":1.54071073617692,
+        "L2":3.97430335027074,
+        "L3":3.65189106558222,
+        "L4":3.03366312440795,
+        "L5":0.118789875656532,
+        "L6":2.4373117048765,
+    }
+    sum = 0
+    mass_sum = 0
+    for i in range(len(body_names)):
+        sum = 0
+
+
+if __name__ == "__main__":
+    mass = {
+        "base_link":9.51755992218181,
+        "R1":1.51779481990376,
+        "R2":3.59389626425694,
+        "R3":3.65910111444716,
+        "R4":2.85321169527239,
+        "R5":0.113692025844553,
+        "R6":2.40125862032741,
+        "L1":1.54071073617692,
+        "L2":3.97430335027074,
+        "L3":3.65189106558222,
+        "L4":3.03366312440795,
+        "L5":0.118789875656532,
+        "L6":2.4373117048765,
+    }
+ 
+   

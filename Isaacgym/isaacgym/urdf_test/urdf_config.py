@@ -24,6 +24,9 @@ class urdfCfg(BaseConfig):
     class asset:
         asset_root = "/home/leovento/Robot-learning/urdf"
         asset_file = "zongzhuangURDF5/urdf/zongzhuangURDF5.urdf"
+        #asset_file = "box/urdf/box.urdf"
+        
+        #asset_file = "cassie/urdf/cassie.urdf"
         fix_base_link = False
         default_dof_drive_mode = 1
 
@@ -42,3 +45,42 @@ class urdfCfg(BaseConfig):
         static_friction = 1     #静摩擦系数
         dynamic_friction = 1    #动摩擦系数
         restitution = 0         #地面弹性   
+
+    #定义控制器参数
+    class control:
+        stiffness = {   'l1': 100.0, 'l2': 100.0,
+                        'l3': 200., 'l4': 200., 'l5': 200.,
+                        'l6': 40.,'r1': 100.0, 'r2': 100.0,
+                        'r3': 200., 'r4': 200., 'r5': 200.,
+                        'r6': 40.}  # [N*m/rad]
+        damping = { 'l1': 3., 'l2': 3.,
+                        'l3': 6., 'l4': 6., 'l5': 6.,
+                        'l6': 1.,'r1': 3.0, 'r2': 3.0,
+                        'r3': 6., 'r4': 6., 'r5': 6.,
+                        'r6': 1.}  # [N*m*s/rad]     # [N*m*s/rad]
+        # action scale: target angle = actionScale * action + defaultAngle
+        action_scale = 0.5
+        # decimation: Number of control action updates @ sim DT per policy DT
+        decimation = 4       
+        control_type = 'P'
+        
+    #定义初始状态
+    class init_state:
+        init_pos = gymapi.Vec3(0, 0, 0)
+        #init_rot = gymapi.Quat(0, 0, 0, 1)
+        init_linear_vel = gymapi.Vec3(0, 0, 0)
+        init_angular_vel = gymapi.Vec3(0, 0, 0)
+        default_joint_angles = {
+            "l1":0,
+            "l2":0,
+            "l3":0,
+            "l4":0,
+            "l5":0,
+            "l6":0,
+            "r1":0,
+            "r2":0,
+            "r3":0,
+            "r4":0,
+            "r5":0,
+            "r6":0
+        }

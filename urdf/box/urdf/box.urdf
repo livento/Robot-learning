@@ -1,0 +1,27 @@
+
+<?xml version="1.0"?>
+<robot name="my_box">
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.083" ixy="0.0" ixz="0.0" iyy="0.083" iyz="0.0" izz="0.083"/>
+    </inertial>
+  </link>
+
+  <joint name="fixed" type="fixed">
+    <parent link="base_link"/>
+    <child link="box"/>
+  </joint>
+
+</robot>

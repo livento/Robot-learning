@@ -153,11 +153,11 @@ plane_params.restitution = 0         #地面弹性
 gym.add_ground(sim, plane_params)
 
 #加载模型
-asset_root = "/home/exo/Code/Isaacgym/isaacgym/assets"
-asset_file = "USD/cassie/urdf/cassie.urdf"
+#asset_root = "/home/exo/Code/Isaacgym/isaacgym/assets"
+#asset_file = "USD/cassie/urdf/cassie.urdf"
 #asset_file = "USD/URDF1/urdf/URDF1.urdf"
-#asset_root = "/home/leovento/isaacgym/assets"#
-#asset_file = "urdf/cartpole.urdf"
+asset_root = "/home/leovento/Robot-learning/urdf"
+asset_file = "cassie/urdf/cassie.urdf"
 asset_options = gymapi.AssetOptions()
 asset_options.fix_base_link = True
 asset_options.default_dof_drive_mode = gymapi.DOF_MODE_POS
@@ -274,7 +274,7 @@ current_dof = 0
 show_axis = True
 
 #while not gym.query_viewer_has_closed(viewer):
-while 1:
+while not gym.query_viewer_has_closed(viewer):
     # step the physics
     gym.simulate(sim)
     gym.fetch_results(sim, True)

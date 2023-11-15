@@ -5,7 +5,8 @@ from isaacgym import gymutil
 import math
 import numpy as np
 from function import print_asset_info, print_actor_info
-
+import time
+import torch
 
 from urdf_config import urdfCfg
 from base_task import BaseTask
@@ -22,7 +23,7 @@ class urdfTest(BaseTask):
         self.load_asset()
         self.create_camera()
         self.add_asset()
-
+        #self._init_buffers()
         self.init_done = True
 
     def create_sim(self):
@@ -65,7 +66,7 @@ class urdfTest(BaseTask):
         self.load_asset_done = True
 
     def add_asset(self):
-        num_envs = self.cfg.env.num_envs
+        self.num_envs = self.cfg.env.num_envs
         env_spacing = self.cfg.env.env_spacing
         env_lower = gymapi.Vec3(-env_spacing, 0.0, -env_spacing)
         env_upper = gymapi.Vec3(env_spacing, env_spacing, env_spacing)
@@ -74,7 +75,7 @@ class urdfTest(BaseTask):
         self.envs = []
         self.actor_handles = []
 
-        for i in range(num_envs):
+        for i in range(self.num_envs):
             env = self.gym.create_env(self.sim, env_lower, env_upper, envs_per_row) #创建环境
             self.envs.append(env)
             initial_pose = gymapi.Transform()
@@ -93,14 +94,89 @@ class urdfTest(BaseTask):
             self.gym.step_graphics(self.sim)
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
-            #print_actor_info(gym,envs[0],actor_handles[0])
+            print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
         self.gym.destroy_viewer(self.viewer)
         self.gym.destroy_sim(self.sim)
 
+    def test_dof(self):
+        num_dofs = self.gym.get_asset_dof_count(self.asset)
+        dof_states = np.zeros(num_dofs, dtype=gymapi.DofState.dtype)
+        dof_positions = dof_states['pos']
+        for i in range(num_dofs):
+            dof_positions[i] = 0
+        while not self.gym.query_viewer_has_closed(self.viewer):
+            # step the physics
+            #休眠0.5s
+            time.sleep(0.5)
+            self.gym.simulate(self.sim)
+            self.gym.fetch_results(self.sim, True)
+            for i in range(self.num_envs):
+                self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], dof_states, gymapi.STATE_POS)
+            self.gym.step_graphics(self.sim)
+            self.gym.draw_viewer(self.viewer, self.sim, True)
+            self.gym.sync_frame_time(self.sim)
+            print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
+    def test_stand(self):
+        while not self.gym.query_viewer_has_closed(self.viewer):
+            # step the physics
+            self.gym.simulate(self.sim)
+            self.gym.fetch_results(self.sim, True)
+            self.gym.step_graphics(self.sim)
+            self.gym.draw_viewer(self.viewer, self.sim, True)
+            self.gym.sync_frame_time(self.sim)
+            print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
+
+
+###########################################################################
+    def _init_buffers(self):
+        self.actor_root_state = self.gym.acquire_actor_root_state_tensor(self.sim)
+        self.dof_state_tensor = self.gym.acquire_dof_state_tensor(self.sim)
+        self.net_contact_forces = self.gym.acquire_net_contact_force_tensor(self.sim)
+        
+        self.num_dofs = self.gym.get_asset_dof_count(self.asset)
+        self.dof_names = self.gym.get_asset_dof_names(self.asset)
+        self.dof_states = np.zeros(self.num_dofs, dtype=gymapi.DofState.dtype)
+
+        self.default_dof_pos = np.zeros(self.num_dofs, dtype=torch.float)
+        for i in range(self.num_dofs):
+            name = self.dof_names[i]
+            angle = self.cfg.init_state.default_joint_angles[name]
+            self.default_dof_pos[i] = angle
+            found = False
+            for dof_name in self.cfg.control.stiffness.keys():
+                if dof_name in name:
+                    self.p_gains[i] = self.cfg.control.stiffness[dof_name]
+                    self.d_gains[i] = self.cfg.control.damping[dof_name]
+                    found = True
+            if not found:
+                self.p_gains[i] = 0.
+                self.d_gains[i] = 0.
+                if self.cfg.control.control_type in ["P", "V"]:
+                    print(f"PD gain of joint {name} were not defined, setting them to zero")
+        self.default_dof_pos = self.default_dof_pos.unsqueeze(0)
+
+
+
+
+
+    def _compute_torques(self,actions):
+        actions_scaled = actions * self.cfg.control.action_scale
+        control_type = self.cfg.control.control_type
+        if control_type=="P":
+            torques = self.p_gains*(actions_scaled + self.default_dof_pos - self.dof_pos) - self.d_gains*self.dof_vel
+        
+        elif control_type=="V":
+            torques = self.p_gains*(actions_scaled - self.dof_vel) - self.d_gains*(self.dof_vel - self.last_dof_vel)/self.sim_params.dt
+        
+        elif control_type=="T":
+            torques = actions_scaled
+        else:
+            raise NameError(f"Unknown controller type: {control_type}")
+        return torques
 
 if __name__ == '__main__':
     cfg = urdfCfg()
     urdf = urdfTest(cfg=cfg)
-    urdf.play()
+    urdf.test_dof()
