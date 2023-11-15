@@ -113,6 +113,8 @@ cam_target = gymapi.Vec3(0, 0, 2)
 viewer = gym.create_viewer(sim, cam_props)
 gym.viewer_camera_look_at(viewer, None, cam_pos, cam_target)
 
+
+
 while not gym.query_viewer_has_closed(viewer):
     # step the physics
     gym.simulate(sim)
