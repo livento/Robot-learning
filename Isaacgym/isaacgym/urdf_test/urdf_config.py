@@ -11,7 +11,7 @@ class urdfCfg(BaseConfig):
 
     #定义环境参数
     class env:
-        num_envs = 16
+        num_envs = 1
         envs_per_row =  math.ceil(math.sqrt(num_envs))
         num_observations = 235
         num_privileged_obs = None # if not None a priviledge_obs_buf will be returned by step() (critic obs for assymetric training). None is returned otherwise 
@@ -24,9 +24,11 @@ class urdfCfg(BaseConfig):
     class asset:
         asset_root = "/home/leovento/Robot-learning/urdf"
         asset_file = "zongzhuangURDF5/urdf/zongzhuangURDF5.urdf"
+        #asset_file = "zongzhuangURDF5_test/urdf/zongzhuangURDF5.urdf"
         #asset_file = "box/urdf/box.urdf"
-        
+        #asset_file = "zongzhuangURDF6/urdf/zongzhuangURDF6.urdf"
         #asset_file = "cassie/urdf/cassie.urdf"
+        #asset_file = "lm2/urdf/lm2.urdf"
         fix_base_link = False
         default_dof_drive_mode = 1
 

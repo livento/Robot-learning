@@ -108,7 +108,7 @@ class urdfTest(BaseTask):
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
             #休眠0.5s
-            time.sleep(0.5)
+            #time.sleep(0.5)
             self.gym.simulate(self.sim)
             self.gym.fetch_results(self.sim, True)
             for i in range(self.num_envs):
@@ -156,8 +156,6 @@ class urdfTest(BaseTask):
                 if self.cfg.control.control_type in ["P", "V"]:
                     print(f"PD gain of joint {name} were not defined, setting them to zero")
         self.default_dof_pos = self.default_dof_pos.unsqueeze(0)
-
-
 
 
 
