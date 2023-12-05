@@ -1,7 +1,7 @@
 from isaacgym import gymapi
 import random
 import os
-from isaacgym import gymutil
+from isaacgym import gymutil, gymtorch
 import math
 import numpy as np
 from function import print_asset_info, print_actor_info
@@ -18,15 +18,17 @@ class urdfTest(BaseTask):
 
         super().__init__(self.cfg)
 
+
         self.create_sim()
         self.create_plane()
         self.load_asset()
         self.create_camera()
         self.add_asset()
-        #self._init_buffers()
+        self._init_buffers()
         self.init_done = True
 
     def create_sim(self):
+
         sim_params = gymapi.SimParams()
         sim_params.dt = self.cfg.sim_params.dt
         if self.cfg.sim_params.gravity_option:
@@ -34,7 +36,10 @@ class urdfTest(BaseTask):
         else:
             sim_params.gravity = gymapi.Vec(0,0,0)
         sim_params.up_axis = self.cfg.sim_params.up_axis
-        self.sim = self.gym.create_sim(0,0,gymapi.SIM_PHYSX, sim_params)
+        sim_params.use_gpu_pipeline = True
+        sim_device_type = 'cuda'
+        self.device = 0
+        self.sim = self.gym.create_sim(self.device,self.device,gymapi.SIM_PHYSX, sim_params)
         self.create_sim_done = True
 
     def create_plane(self):
@@ -108,7 +113,7 @@ class urdfTest(BaseTask):
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
             #休眠0.5s
-            #time.sleep(0.5)
+            time.sleep(1)
             self.gym.simulate(self.sim)
             self.gym.fetch_results(self.sim, True)
             for i in range(self.num_envs):
@@ -116,7 +121,7 @@ class urdfTest(BaseTask):
             self.gym.step_graphics(self.sim)
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
-            print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
+            #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
     def test_stand(self):
         while not self.gym.query_viewer_has_closed(self.viewer):
@@ -131,15 +136,39 @@ class urdfTest(BaseTask):
 
 ###########################################################################
     def _init_buffers(self):
-        self.actor_root_state = self.gym.acquire_actor_root_state_tensor(self.sim)
-        self.dof_state_tensor = self.gym.acquire_dof_state_tensor(self.sim)
-        self.net_contact_forces = self.gym.acquire_net_contact_force_tensor(self.sim)
+
         
         self.num_dofs = self.gym.get_asset_dof_count(self.asset)
         self.dof_names = self.gym.get_asset_dof_names(self.asset)
-        self.dof_states = np.zeros(self.num_dofs, dtype=gymapi.DofState.dtype)
+        #数据先从运行于gpu的gym环境中读取出来再解包成tensors
+        # Retrieves buffer for Actor root states. 
+        # The buffer has shape (num_actors, 13). 
+        # State for each actor root contains position([0:3]),
+        # rotation([3:7]), linear velocity([7:10]), and angular velocity([10:13]).
+        actor_root_state = self.gym.acquire_actor_root_state_tensor(self.sim)
+        self.root_states = gymtorch.wrap_tensor(actor_root_state)
+        
+        # Retrieves Degree-of-Freedom state buffer. 
+        # Buffer has shape (num_dofs, 2).
+        # Each DOF state contains position and velocity.
+        dof_state_tensor = self.gym.acquire_dof_state_tensor(self.sim)
+        self.dof_state = gymtorch.wrap_tensor(dof_state_tensor)
+        self.dof_pos = self.dof_state.view(self.num_envs, self.num_dofs, 2)[..., 0]
+        self.dof_vel = self.dof_state.view(self.num_envs, self.num_dofs, 2)[..., 1]       
+        self.base_quat = self.root_states[:, 3:7]
 
-        self.default_dof_pos = np.zeros(self.num_dofs, dtype=torch.float)
+
+        #Retrieves buffer for net contract forces.
+        #The buffer has shape (num_rigid_bodies, 3). 
+        #Each contact force state contains one value for each X, Y, Z axis.
+        net_contact_forces = self.gym.acquire_net_contact_force_tensor(self.sim)
+        # shape: num_envs, num_bodies, xyz axis
+        self.contact_forces = gymtorch.wrap_tensor(net_contact_forces).view(self.num_envs, -1, 3) 
+
+        self.num_actions = self.cfg.env.num_actions
+        self.default_dof_pos = torch.zeros(self.num_dofs, dtype=torch.float, device=self.device, requires_grad=False)
+        self.p_gains = torch.zeros(self.num_actions, dtype=torch.float, device=self.device, requires_grad=False)
+        self.d_gains = torch.zeros(self.num_actions, dtype=torch.float, device=self.device, requires_grad=False)       
         for i in range(self.num_dofs):
             name = self.dof_names[i]
             angle = self.cfg.init_state.default_joint_angles[name]
@@ -160,6 +189,15 @@ class urdfTest(BaseTask):
 
 
     def _compute_torques(self,actions):
+        """
+        PD控制器
+
+        Args:
+            actions (torch.Tensor): Actions
+
+        Returns:
+            [torch.Tensor]: Torques sent to the simulation
+        """
         actions_scaled = actions * self.cfg.control.action_scale
         control_type = self.cfg.control.control_type
         if control_type=="P":
