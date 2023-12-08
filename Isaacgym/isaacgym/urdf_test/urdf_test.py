@@ -36,10 +36,11 @@ class urdfTest(BaseTask):
         else:
             sim_params.gravity = gymapi.Vec(0,0,0)
         sim_params.up_axis = self.cfg.sim_params.up_axis
-        sim_params.use_gpu_pipeline = True
+        sim_params.use_gpu_pipeline = False
         sim_device_type = 'cuda'
-        self.device = 0
-        self.sim = self.gym.create_sim(self.device,self.device,gymapi.SIM_PHYSX, sim_params)
+        self.device = 'cpu'
+        self.device_id = 0
+        self.sim = self.gym.create_sim(self.device_id,self.device_id,gymapi.SIM_PHYSX, sim_params)
         self.create_sim_done = True
 
     def create_plane(self):
@@ -113,25 +114,51 @@ class urdfTest(BaseTask):
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
             #休眠0.5s
-            time.sleep(1)
+            #time.sleep(1)
             self.gym.simulate(self.sim)
             self.gym.fetch_results(self.sim, True)
             for i in range(self.num_envs):
-                self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], dof_states, gymapi.STATE_POS)
+                self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], dof_states, gymapi.STATE_ALL)
             self.gym.step_graphics(self.sim)
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
             #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
     def test_stand(self):
+        dof_props = self.gym.get_asset_dof_properties(self.asset)
+        dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
+        dof_props["stiffness"][:11].fill(400.0)
+        dof_props["damping"][:11].fill(40.0)
+
+        self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
+        self.default_dof_state["pos"] = self.default_dof_pos
+
+
+        pos_action = torch.zeros_like(self.dof_pos).squeeze(-1)
+        effort_action = torch.zeros_like(pos_action)
+
+        for i in range(self.num_envs):
+            self.gym.set_actor_dof_properties(self.envs[i], self.actor_handles[i],dof_props )
+
+            self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], self.default_dof_pos, gymapi.STATE_ALL)
+
+            self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
+
+        _jacobian = self.gym.acquire_jacobian_tensor(self.sim,'MyActor')
+        jacobian = gymtorch.wrap_tensor(_jacobian)
+
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
             self.gym.simulate(self.sim)
             self.gym.fetch_results(self.sim, True)
+            self.gym.refresh_dof_state_tensor(self.sim)
+
+            self.gym.set_dof_position_target_tensor(self.sim, gymtorch.unwrap_tensor(pos_action))
+            
             self.gym.step_graphics(self.sim)
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
-            print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
+            #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
 
 ###########################################################################
@@ -215,4 +242,4 @@ class urdfTest(BaseTask):
 if __name__ == '__main__':
     cfg = urdfCfg()
     urdf = urdfTest(cfg=cfg)
-    urdf.test_dof()
+    urdf.test_stand()

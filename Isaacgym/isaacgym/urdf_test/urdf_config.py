@@ -29,7 +29,7 @@ class urdfCfg(BaseConfig):
         #asset_file = "zongzhuangURDF6/urdf/zongzhuangURDF6.urdf"
         #asset_file = "cassie/urdf/cassie.urdf"
         #asset_file = "lm2/urdf/lm2.urdf"
-        fix_base_link = False
+        fix_base_link = True
         default_dof_drive_mode = 1
 
         
@@ -68,7 +68,7 @@ class urdfCfg(BaseConfig):
         
     #定义初始状态
     class init_state:
-        init_pos = gymapi.Vec3(0, 0, 0)
+        init_pos = gymapi.Vec3(1, 0, 0)
         #init_rot = gymapi.Quat(0, 0, 0, 1)
         init_linear_vel = gymapi.Vec3(0, 0, 0)
         init_angular_vel = gymapi.Vec3(0, 0, 0)
