@@ -29,7 +29,7 @@ class urdfCfg(BaseConfig):
         #asset_file = "zongzhuangURDF6/urdf/zongzhuangURDF6.urdf"
         #asset_file = "cassie/urdf/cassie.urdf"
         #asset_file = "lm2/urdf/lm2.urdf"
-        fix_base_link = False
+        fix_base_link = True
         default_dof_drive_mode = 1
 
         

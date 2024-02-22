@@ -45,7 +45,8 @@ def set_plane(plane_params):
 asset_root = "/home/leovento/Robot-learning/urdf"
 #asset_file = "zongzhuangURDF5/urdf/zongzhuangURDF5.urdf"
 #asset_file = "lm2/urdf/lm2.urdf"
-asset_file = "cassie/urdf/cassie.urdf"
+#asset_file = "cassie/urdf/cassie.urdf"
+asset_file = "arm3/urdf/arm3.urdf"
 
 gym = gymapi.acquire_gym()
 
@@ -82,7 +83,7 @@ dof_positions = dof_states['pos']
 #创建具体的运行环境
 num_envs = 16
 envs_per_row = 4
-env_spacing = 50.0
+env_spacing = 2.0
 env_lower = gymapi.Vec3(-env_spacing, 0.0, -env_spacing)
 env_upper = gymapi.Vec3(env_spacing, env_spacing, env_spacing) #环境大小
 
@@ -94,10 +95,9 @@ for i in range(num_envs):
     env = gym.create_env(sim, env_lower, env_upper, envs_per_row) #创建环境
     envs.append(env)
 
-    height = random.uniform(1.0, 2.5)
 
     initial_pose = gymapi.Transform()
-    initial_pose.p = gymapi.Vec3(0.0, 0, 1.060)  #每个actor加入时的位置
+    initial_pose.p = gymapi.Vec3(0.0, 0, 0)  #每个actor加入时的位置
     #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
     #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
     #为每一个环境添加对象
@@ -114,7 +114,7 @@ viewer = gym.create_viewer(sim, cam_props)
 gym.viewer_camera_look_at(viewer, None, cam_pos, cam_target)
 
 
-
+td = 0
 while not gym.query_viewer_has_closed(viewer):
     # step the physics
     gym.simulate(sim)
@@ -122,6 +122,10 @@ while not gym.query_viewer_has_closed(viewer):
     gym.step_graphics(sim)
     gym.draw_viewer(viewer, sim, True)
     gym.sync_frame_time(sim)
+    td=td+1
+    for i in range(num_envs):
+        if(td<60):
+            gym.apply_body_forces(envs[i],)
     #print_actor_info(gym,envs[0],actor_handles[0])
 
 gym.destroy_viewer(viewer)

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="arm3">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0 0 0.0001344"
+        rpy="0 0 0" />
+      <mass
+        value="17.735" />
+      <inertia
+        ixx="0.18033"
+        ixy="1.3878E-17"
+        ixz="3.1561E-18"
+        iyy="0.18033"
+        iyz="9.2658E-19"
+        izz="0.35315" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh
+          filename="package://arm3/meshes/base_link.STL" />
+      </geometry>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+  </link>
+  <link
+    name="link_1">
+    <inertial>
+      <origin
+        xyz="-0.25 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="10" />
+      <inertia
+        ixx="0.625"
+        ixy="0."
+        ixz="0."
+        iyy="0."
+        iyz="0."
+        izz="0."  />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://arm3/meshes/link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://arm3/meshes/link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.035"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="link_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-31.4"
+      upper="31.4"
+      effort="100000"
+      velocity="10000" />
+  </joint>
+
+</robot>
