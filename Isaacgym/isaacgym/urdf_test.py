@@ -97,8 +97,8 @@ for i in range(num_envs):
 
 
     initial_pose = gymapi.Transform()
-    initial_pose.p = gymapi.Vec3(0.0, 0, 0)  #每个actor加入时的位置
-    #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
+    initial_pose.p = gymapi.Vec3(0.0, 0, 2)  #每个actor加入时的位置
+    initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
     #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
     #为每一个环境添加对象
     actor_handle = gym.create_actor(env, asset, initial_pose, "MyActor", i, 1)#i指的是碰撞组，只有在统一碰撞组的对象会碰撞，1是位掩码，用于过滤物体碰撞
@@ -123,9 +123,9 @@ while not gym.query_viewer_has_closed(viewer):
     gym.draw_viewer(viewer, sim, True)
     gym.sync_frame_time(sim)
     td=td+1
-    for i in range(num_envs):
-        if(td<60):
-            gym.apply_body_forces(envs[i],)
+   # for i in range(num_envs):
+   #     if(td<60):
+   #         gym.apply_body_forces(envs[i],)
     #print_actor_info(gym,envs[0],actor_handles[0])
 
 gym.destroy_viewer(viewer)
