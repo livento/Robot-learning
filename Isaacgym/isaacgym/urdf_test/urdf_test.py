@@ -85,7 +85,7 @@ class urdfTest(BaseTask):
             env = self.gym.create_env(self.sim, env_lower, env_upper, envs_per_row) #创建环境
             self.envs.append(env)
             initial_pose = gymapi.Transform()
-            initial_pose.p = gymapi.Vec3(0.0, 0, 0)  #每个actor加入时的位置
+            initial_pose.p = gymapi.Vec3(0.0, 0, 1)  #每个actor加入时的位置
             #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
             #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
             #为每一个环境添加对象
@@ -127,8 +127,8 @@ class urdfTest(BaseTask):
     def test_stand(self):
         dof_props = self.gym.get_asset_dof_properties(self.asset)
         dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
-        dof_props["stiffness"][:11].fill(400.0)
-        dof_props["damping"][:11].fill(40.0)
+        dof_props["stiffness"][:11].fill(500.0)
+        dof_props["damping"][:11].fill(1.0)
 
         self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
         self.default_dof_state["pos"] = self.default_dof_pos

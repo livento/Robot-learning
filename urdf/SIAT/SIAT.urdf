@@ -8,7 +8,7 @@
     name="base_link">
     <inertial>
       <origin
-        xyz="0.12283 0.0054798 0.19053"
+        xyz="0.32283 0.0054798 0.19053"
         rpy="0 0 0" />
       <mass
         value="11.483" />
@@ -273,7 +273,7 @@
     <limit
       lower="-0.052399"
       upper="1.2217"
-      effort="200"
+      effort="300"
       velocity="10" />
   </joint>
   <link
@@ -331,7 +331,7 @@
     <limit
       lower="-0.62831"
       upper="0.69813"
-      effort="200"
+      effort="300"
       velocity="10" />
   </joint>
   <link
@@ -389,7 +389,7 @@
     <limit
       lower="-0.43633"
       upper="0.34907"
-      effort="200"
+      effort="300"
       velocity="10" />
   </joint>
   <link
@@ -679,7 +679,7 @@
     <limit
       lower="-0.62831"
       upper="0.69813"
-      effort="200"
+      effort="300"
       velocity="10" />
   </joint>
   <link
@@ -737,7 +737,7 @@
     <limit
       lower="-0.34907"
       upper="0.43633"
-      effort="200"
+      effort="300"
       velocity="10" />
   </joint>
 </robot>
