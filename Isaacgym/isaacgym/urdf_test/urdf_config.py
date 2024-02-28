@@ -31,6 +31,7 @@ class urdfCfg(BaseConfig):
         #asset_file = "lm2/urdf/lm2.urdf"
         asset_file = "SIAT/SIAT.urdf"
         fix_base_link = False
+        #fix_base_link = True
         default_dof_drive_mode = 1
 
         

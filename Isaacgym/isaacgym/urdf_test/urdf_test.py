@@ -85,7 +85,7 @@ class urdfTest(BaseTask):
             env = self.gym.create_env(self.sim, env_lower, env_upper, envs_per_row) #创建环境
             self.envs.append(env)
             initial_pose = gymapi.Transform()
-            initial_pose.p = gymapi.Vec3(0.0, 0, 1)  #每个actor加入时的位置
+            initial_pose.p = gymapi.Vec3(0.0, 0, 0.973)  #每个actor加入时的位置
             #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
             #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
             #为每一个环境添加对象
@@ -127,7 +127,8 @@ class urdfTest(BaseTask):
     def test_stand(self):
         dof_props = self.gym.get_asset_dof_properties(self.asset)
         dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
-        dof_props["stiffness"][:11].fill(500.0)
+        
+        dof_props["stiffness"][:11].fill(300.0)
         dof_props["damping"][:11].fill(1.0)
 
         self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
@@ -144,9 +145,6 @@ class urdfTest(BaseTask):
 
             self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
 
-        _jacobian = self.gym.acquire_jacobian_tensor(self.sim,'MyActor')
-        jacobian = gymtorch.wrap_tensor(_jacobian)
-
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
             self.gym.simulate(self.sim)
@@ -160,6 +158,56 @@ class urdfTest(BaseTask):
             self.gym.sync_frame_time(self.sim)
             #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
+    def test_torque_control(self):
+        self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
+        self.default_dof_state["pos"] = self.default_dof_pos
+        dof_props = self.gym.get_asset_dof_properties(self.asset)
+        dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
+
+        pos_action = torch.zeros_like(self.dof_pos).squeeze(-1)
+        effort_action = torch.zeros_like(pos_action)
+
+        for i in range(self.num_envs):
+            self.gym.set_actor_dof_properties(self.envs[i], self.actor_handles[i],dof_props )
+
+            self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], self.default_dof_pos, gymapi.STATE_ALL)
+
+            self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
+
+        while not self.gym.query_viewer_has_closed(self.viewer):
+            # step the physics
+            self.gym.simulate(self.sim)
+            self.gym.fetch_results(self.sim, True)
+            
+            self.gym.refresh_dof_state_tensor(self.sim)
+            
+            self.torques = self._compute_torques(pos_action).view(self.torques.shape)
+            self.gym.set_dof_actuation_force_tensor(self.sim, gymtorch.unwrap_tensor(self.torques))
+
+
+            self.gym.step_graphics(self.sim)
+            self.gym.draw_viewer(self.viewer, self.sim, True)
+            self.gym.sync_frame_time(self.sim)
+
+
+    def _compute_torques(self, actions):
+        """ Compute torques from actions.
+            Actions can be interpreted as position or velocity targets given to a PD controller, or directly as scaled torques.
+            [NOTE]: torques must have the same dimension as the number of DOFs, even if some DOFs are not actuated.
+
+        Args:
+            actions (torch.Tensor): Actions
+
+        Returns:
+            [torch.Tensor]: Torques sent to the simulation
+        """
+        #pd controller
+        actions_scaled = actions * self.cfg.control.action_scale
+        control_type = self.cfg.control.control_type
+        torques = self.p_gains*(actions_scaled + self.default_dof_pos - self.dof_pos) - self.d_gains*self.dof_vel
+
+        #return torch.clip(torques, -self.torque_limits, self.torque_limits)
+        return torques
 
 ###########################################################################
     def _init_buffers(self):
@@ -184,6 +232,7 @@ class urdfTest(BaseTask):
         self.dof_vel = self.dof_state.view(self.num_envs, self.num_dofs, 2)[..., 1]       
         self.base_quat = self.root_states[:, 3:7]
 
+        
 
         #Retrieves buffer for net contract forces.
         #The buffer has shape (num_rigid_bodies, 3). 
@@ -195,7 +244,8 @@ class urdfTest(BaseTask):
         self.num_actions = self.cfg.env.num_actions
         self.default_dof_pos = torch.zeros(self.num_dofs, dtype=torch.float, device=self.device, requires_grad=False)
         self.p_gains = torch.zeros(self.num_actions, dtype=torch.float, device=self.device, requires_grad=False)
-        self.d_gains = torch.zeros(self.num_actions, dtype=torch.float, device=self.device, requires_grad=False)       
+        self.d_gains = torch.zeros(self.num_actions, dtype=torch.float, device=self.device, requires_grad=False)  
+        self.torques = torch.zeros(self.num_envs, self.num_actions, dtype=torch.float, device=self.device, requires_grad=False)     
         for i in range(self.num_dofs):
             name = self.dof_names[i]
             angle = self.cfg.init_state.default_joint_angles[name]
@@ -242,4 +292,5 @@ class urdfTest(BaseTask):
 if __name__ == '__main__':
     cfg = urdfCfg()
     urdf = urdfTest(cfg=cfg)
-    urdf.test_stand()
+    #urdf.test_stand()
+    urdf.test_torque_control()

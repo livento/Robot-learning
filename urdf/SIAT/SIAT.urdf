@@ -74,15 +74,6 @@
           rgba="0.5451 0.61569 0.85882 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/r_1.STL" />
-      </geometry>
-    </collision>
   </link>
   <joint
     name="joint_r_1"
@@ -132,15 +123,7 @@
           rgba="0.92941 0.76863 0.67059 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/r_2.STL" />
-      </geometry>
-    </collision>
+
   </link>
   <joint
     name="joint_r_2"
@@ -190,15 +173,7 @@
           rgba="0.8902 0.71765 0.58824 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/r_3.STL" />
-      </geometry>
-    </collision>
+
   </link>
   <joint
     name="joint_r_3"
@@ -248,15 +223,7 @@
           rgba="0.75294 1 1 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/r_4.STL" />
-      </geometry>
-    </collision>
+
   </link>
   <joint
     name="joint_r_4"
@@ -306,15 +273,7 @@
           rgba="0.92157 0.88235 0.64314 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/r_5.STL" />
-      </geometry>
-    </collision>
+
   </link>
   <joint
     name="joint_r_5"
@@ -422,15 +381,6 @@
           rgba="0.5451 0.61569 0.85882 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/l_1.STL" />
-      </geometry>
-    </collision>
   </link>
   <joint
     name="joint_l_1"
@@ -480,15 +430,6 @@
           rgba="0.64706 0.61961 0.58824 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/l_2.STL" />
-      </geometry>
-    </collision>
   </link>
   <joint
     name="joint_l_2"
@@ -538,15 +479,7 @@
           rgba="0.8902 0.71765 0.58824 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/l_3.STL" />
-      </geometry>
-    </collision>
+
   </link>
   <joint
     name="joint_l_3"
@@ -596,15 +529,7 @@
           rgba="0.64706 0.61961 0.58824 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/l_4.STL" />
-      </geometry>
-    </collision>
+
   </link>
   <joint
     name="joint_l_4"
@@ -654,15 +579,7 @@
           rgba="0.75686 0.76863 0.75294 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://SIAT/meshes/l_5.STL" />
-      </geometry>
-    </collision>
+
   </link>
   <joint
     name="joint_l_5"
