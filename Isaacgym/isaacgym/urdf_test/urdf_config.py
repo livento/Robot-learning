@@ -30,14 +30,14 @@ class urdfCfg(BaseConfig):
         #asset_file = "cassie/urdf/cassie.urdf"
         #asset_file = "lm2/urdf/lm2.urdf"
         asset_file = "SIAT/SIAT.urdf"
-        fix_base_link = False
-        #fix_base_link = True
+        #fix_base_link = False
+        fix_base_link = True
         default_dof_drive_mode = 1
 
         
     #定义仿真器参数
     class sim_params:
-        dt = 1/60
+        dt = 1/1000
         up_axis = gymapi.UP_AXIS_Z
         gravity = gymapi.Vec3(0,0,-9.8)
         gravity_option = True

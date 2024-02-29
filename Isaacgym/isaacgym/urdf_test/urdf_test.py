@@ -85,7 +85,8 @@ class urdfTest(BaseTask):
             env = self.gym.create_env(self.sim, env_lower, env_upper, envs_per_row) #创建环境
             self.envs.append(env)
             initial_pose = gymapi.Transform()
-            initial_pose.p = gymapi.Vec3(0.0, 0, 0.973)  #每个actor加入时的位置
+            #initial_pose.p = gymapi.Vec3(0.0, 0, 0.973)  #每个actor加入时的位置
+            initial_pose.p = gymapi.Vec3(0.0, 0, 1.973)
             #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
             #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
             #为每一个环境添加对象
@@ -128,8 +129,8 @@ class urdfTest(BaseTask):
         dof_props = self.gym.get_asset_dof_properties(self.asset)
         dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
         
-        dof_props["stiffness"][:11].fill(300.0)
-        dof_props["damping"][:11].fill(1.0)
+        dof_props["stiffness"][:11].fill(3000000.0)
+        dof_props["damping"][:11].fill(10000.0)
 
         self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
         self.default_dof_state["pos"] = self.default_dof_pos
@@ -145,14 +146,19 @@ class urdfTest(BaseTask):
 
             self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
 
+        dt = 0
+        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/isaacgym/urdf_test/giat/gait/gait.txt', delimiter='\t',dtype=np.float32)
+        gait = gait/360*2*math.pi
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
             self.gym.simulate(self.sim)
             self.gym.fetch_results(self.sim, True)
             self.gym.refresh_dof_state_tensor(self.sim)
 
+            pos_action = torch.from_numpy(gait[dt])
             self.gym.set_dof_position_target_tensor(self.sim, gymtorch.unwrap_tensor(pos_action))
-            
+            dt = dt+1
+
             self.gym.step_graphics(self.sim)
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
@@ -163,7 +169,7 @@ class urdfTest(BaseTask):
         self.default_dof_state["pos"] = self.default_dof_pos
         dof_props = self.gym.get_asset_dof_properties(self.asset)
         dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
-
+        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/isaacgym/urdf_test/giat/gait/gait.txt', delimiter='\t',dtype=np.float32)
         pos_action = torch.zeros_like(self.dof_pos).squeeze(-1)
         effort_action = torch.zeros_like(pos_action)
 
@@ -174,6 +180,8 @@ class urdfTest(BaseTask):
 
             self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
 
+        dt = 0
+
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
             self.gym.simulate(self.sim)
@@ -181,8 +189,11 @@ class urdfTest(BaseTask):
             
             self.gym.refresh_dof_state_tensor(self.sim)
             
+            pos_action = torch.from_numpy(gait[dt])
             self.torques = self._compute_torques(pos_action).view(self.torques.shape)
+            print(self.torques)
             self.gym.set_dof_actuation_force_tensor(self.sim, gymtorch.unwrap_tensor(self.torques))
+            dt = dt+30
 
 
             self.gym.step_graphics(self.sim)
@@ -265,32 +276,32 @@ class urdfTest(BaseTask):
 
 
 
-    def _compute_torques(self,actions):
-        """
-        PD控制器
+    # def _compute_torques(self,actions):
+    #     """
+    #     PD控制器
 
-        Args:
-            actions (torch.Tensor): Actions
+    #     Args:
+    #         actions (torch.Tensor): Actions
 
-        Returns:
-            [torch.Tensor]: Torques sent to the simulation
-        """
-        actions_scaled = actions * self.cfg.control.action_scale
-        control_type = self.cfg.control.control_type
-        if control_type=="P":
-            torques = self.p_gains*(actions_scaled + self.default_dof_pos - self.dof_pos) - self.d_gains*self.dof_vel
+    #     Returns:
+    #         [torch.Tensor]: Torques sent to the simulation
+    #     """
+    #     actions_scaled = actions * self.cfg.control.action_scale
+    #     control_type = self.cfg.control.control_type
+    #     if control_type=="P":
+    #         torques = self.p_gains*(actions_scaled + self.default_dof_pos - self.dof_pos) - self.d_gains*self.dof_vel
         
-        elif control_type=="V":
-            torques = self.p_gains*(actions_scaled - self.dof_vel) - self.d_gains*(self.dof_vel - self.last_dof_vel)/self.sim_params.dt
+    #     elif control_type=="V":
+    #         torques = self.p_gains*(actions_scaled - self.dof_vel) - self.d_gains*(self.dof_vel - self.last_dof_vel)/self.sim_params.dt
         
-        elif control_type=="T":
-            torques = actions_scaled
-        else:
-            raise NameError(f"Unknown controller type: {control_type}")
-        return torques
+    #     elif control_type=="T":
+    #         torques = actions_scaled
+    #     else:
+    #         raise NameError(f"Unknown controller type: {control_type}")
+    #     return torques
 
 if __name__ == '__main__':
     cfg = urdfCfg()
     urdf = urdfTest(cfg=cfg)
-    #urdf.test_stand()
-    urdf.test_torque_control()
+    urdf.test_stand()
+    #urdf.test_torque_control()

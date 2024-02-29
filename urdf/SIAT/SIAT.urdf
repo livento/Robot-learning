@@ -86,7 +86,7 @@
     <child
       link="r_1" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="-0.5236"
       upper="0.69813"
@@ -136,7 +136,7 @@
     <child
       link="r_2" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="-0.38397"
       upper="0.5236"
@@ -290,7 +290,7 @@
     <limit
       lower="-0.62831"
       upper="0.69813"
-      effort="300"
+      effort="3000"
       velocity="10" />
   </joint>
   <link
@@ -344,7 +344,7 @@
     <child
       link="r_6" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="-0.43633"
       upper="0.34907"
@@ -393,7 +393,7 @@
     <child
       link="l_1" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="-0.69813"
       upper="0.5236"
@@ -442,7 +442,7 @@
     <child
       link="l_2" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="-0.5236"
       upper="0.38397"
@@ -492,7 +492,7 @@
     <child
       link="l_3" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="-0.69813"
       upper="0.2618"
@@ -542,7 +542,7 @@
     <child
       link="l_4" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="-0.052399"
       upper="1.2217"
@@ -592,11 +592,11 @@
     <child
       link="l_5" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="-0.62831"
       upper="0.69813"
-      effort="300"
+      effort="3000"
       velocity="10" />
   </joint>
   <link
