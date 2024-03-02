@@ -129,9 +129,14 @@ class urdfTest(BaseTask):
         dof_props = self.gym.get_asset_dof_properties(self.asset)
         dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
         
-        dof_props["stiffness"][:11].fill(3000000.0)
-        dof_props["damping"][:11].fill(10000.0)
 
+
+        # dof_props["stiffness"][:11].fill(3000000.0)
+        # dof_props["damping"][:11].fill(10000.0)
+
+        dof_props["stiffness"][:12]=self.p_gains
+        dof_props["damping"][:12]=self.d_gains
+        
         self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
         self.default_dof_state["pos"] = self.default_dof_pos
 
@@ -164,61 +169,60 @@ class urdfTest(BaseTask):
             self.gym.sync_frame_time(self.sim)
             #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
-    def test_torque_control(self):
-        self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
-        self.default_dof_state["pos"] = self.default_dof_pos
-        dof_props = self.gym.get_asset_dof_properties(self.asset)
-        dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
-        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/isaacgym/urdf_test/giat/gait/gait.txt', delimiter='\t',dtype=np.float32)
-        pos_action = torch.zeros_like(self.dof_pos).squeeze(-1)
-        effort_action = torch.zeros_like(pos_action)
+    # def test_torque_control(self):
+    #     self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
+    #     self.default_dof_state["pos"] = self.default_dof_pos
+    #     dof_props = self.gym.get_asset_dof_properties(self.asset)
+    #     dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
+    #     gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/isaacgym/urdf_test/giat/gait/gait.txt', delimiter='\t',dtype=np.float32)
+    #     pos_action = torch.zeros_like(self.dof_pos).squeeze(-1)
+    #     effort_action = torch.zeros_like(pos_action)
 
-        for i in range(self.num_envs):
-            self.gym.set_actor_dof_properties(self.envs[i], self.actor_handles[i],dof_props )
+    #     for i in range(self.num_envs):
+    #         self.gym.set_actor_dof_properties(self.envs[i], self.actor_handles[i],dof_props )
 
-            self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], self.default_dof_pos, gymapi.STATE_ALL)
+    #         self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], self.default_dof_pos, gymapi.STATE_ALL)
 
-            self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
 
-        dt = 0
+    #     dt = 0
 
-        while not self.gym.query_viewer_has_closed(self.viewer):
-            # step the physics
-            self.gym.simulate(self.sim)
-            self.gym.fetch_results(self.sim, True)
+    #     while not self.gym.query_viewer_has_closed(self.viewer):
+    #         # step the physics
+    #         self.gym.simulate(self.sim)
+    #         self.gym.fetch_results(self.sim, True)
             
-            self.gym.refresh_dof_state_tensor(self.sim)
+    #         self.gym.refresh_dof_state_tensor(self.sim)
             
-            pos_action = torch.from_numpy(gait[dt])
-            self.torques = self._compute_torques(pos_action).view(self.torques.shape)
-            print(self.torques)
-            self.gym.set_dof_actuation_force_tensor(self.sim, gymtorch.unwrap_tensor(self.torques))
-            dt = dt+30
+    #         pos_action = torch.from_numpy(gait[dt])
+    #         self.torques = self._compute_torques(pos_action).view(self.torques.shape)
+    #         print(self.torques)
+    #         self.gym.set_dof_actuation_force_tensor(self.sim, gymtorch.unwrap_tensor(self.torques))
+    #         dt = dt+1
 
 
-            self.gym.step_graphics(self.sim)
-            self.gym.draw_viewer(self.viewer, self.sim, True)
-            self.gym.sync_frame_time(self.sim)
+    #         self.gym.step_graphics(self.sim)
+    #         self.gym.draw_viewer(self.viewer, self.sim, True)
+    #         self.gym.sync_frame_time(self.sim)
 
 
-    def _compute_torques(self, actions):
-        """ Compute torques from actions.
-            Actions can be interpreted as position or velocity targets given to a PD controller, or directly as scaled torques.
-            [NOTE]: torques must have the same dimension as the number of DOFs, even if some DOFs are not actuated.
+    # def _compute_torques(self, actions):
+    #     """ Compute torques from actions.
+    #         Actions can be interpreted as position or velocity targets given to a PD controller, or directly as scaled torques.
+    #         [NOTE]: torques must have the same dimension as the number of DOFs, even if some DOFs are not actuated.
 
-        Args:
-            actions (torch.Tensor): Actions
+    #     Args:
+    #         actions (torch.Tensor): Actions
 
-        Returns:
-            [torch.Tensor]: Torques sent to the simulation
-        """
-        #pd controller
-        actions_scaled = actions * self.cfg.control.action_scale
-        control_type = self.cfg.control.control_type
-        torques = self.p_gains*(actions_scaled + self.default_dof_pos - self.dof_pos) - self.d_gains*self.dof_vel
+    #     Returns:
+    #         [torch.Tensor]: Torques sent to the simulation
+    #     """
+    #     #pd controller
+    #     actions_scaled = actions * self.cfg.control.action_scale
+    #     control_type = self.cfg.control.control_type
+    #     torques = self.p_gains*(actions_scaled + self.default_dof_pos - self.dof_pos) - self.d_gains*self.dof_vel
 
-        #return torch.clip(torques, -self.torque_limits, self.torque_limits)
-        return torques
+    #     #return torch.clip(torques, -self.torque_limits, self.torque_limits)
+    #     return torques
 
 ###########################################################################
     def _init_buffers(self):
@@ -304,4 +308,3 @@ if __name__ == '__main__':
     cfg = urdfCfg()
     urdf = urdfTest(cfg=cfg)
     urdf.test_stand()
-    #urdf.test_torque_control()

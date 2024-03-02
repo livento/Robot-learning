@@ -90,8 +90,8 @@
     <limit
       lower="-0.5236"
       upper="0.69813"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="r_2">
@@ -140,8 +140,8 @@
     <limit
       lower="-0.38397"
       upper="0.5236"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="r_3">
@@ -190,8 +190,8 @@
     <limit
       lower="-0.69813"
       upper="0.2618"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="r_4">
@@ -240,8 +240,8 @@
     <limit
       lower="-0.052399"
       upper="1.2217"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="r_5">
@@ -291,7 +291,7 @@
       lower="-0.62831"
       upper="0.69813"
       effort="3000"
-      velocity="10" />
+      velocity="40" />
   </joint>
   <link
     name="r_6">
@@ -348,8 +348,8 @@
     <limit
       lower="-0.43633"
       upper="0.34907"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="l_1">
@@ -397,8 +397,8 @@
     <limit
       lower="-0.69813"
       upper="0.5236"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="l_2">
@@ -446,8 +446,8 @@
     <limit
       lower="-0.5236"
       upper="0.38397"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="l_3">
@@ -496,8 +496,8 @@
     <limit
       lower="-0.69813"
       upper="0.2618"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="l_4">
@@ -546,8 +546,8 @@
     <limit
       lower="-0.052399"
       upper="1.2217"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
   <link
     name="l_5">
@@ -597,7 +597,7 @@
       lower="-0.62831"
       upper="0.69813"
       effort="3000"
-      velocity="10" />
+      velocity="40" />
   </joint>
   <link
     name="l_6">
@@ -654,7 +654,7 @@
     <limit
       lower="-0.34907"
       upper="0.43633"
-      effort="300"
-      velocity="10" />
+      effort="500"
+      velocity="40" />
   </joint>
 </robot>

@@ -52,16 +52,29 @@ class urdfCfg(BaseConfig):
 
     #定义控制器参数
     class control:
-        stiffness = {   'joint_l_1': 100.0, 'joint_l_2': 100.0,
-                        'joint_l_3': 200., 'joint_l_4': 200., 'joint_l_5': 200.,
-                        'joint_l_6': 40.,'joint_r_1': 100.0, 'joint_r_2': 100.0,
-                        'joint_r_3': 200., 'joint_r_4': 200., 'joint_r_5': 200.,
-                        'joint_r_6': 40.}  # [N*m/rad]
-        damping = { 'joint_l_1': 3., 'joint_l_2': 3.,
-                        'joint_l_3': 6., 'joint_l_4': 6., 'joint_l_5': 6.,
-                        'joint_l_6': 1.,'joint_r_1': 3.0, 'joint_r_2': 3.0,
-                        'joint_r_3': 6., 'joint_r_4': 6., 'joint_r_5': 6.,
-                        'joint_r_6': 1.}  # [N*m*s/rad]     # [N*m*s/rad]
+        # stiffness = {   'joint_l_1': 100.0, 'joint_l_2': 100.0,
+        #                 'joint_l_3': 200., 'joint_l_4': 200., 'joint_l_5': 200.,
+        #                 'joint_l_6': 40.,'joint_r_1': 100.0, 'joint_r_2': 100.0,
+        #                 'joint_r_3': 200., 'joint_r_4': 200., 'joint_r_5': 200.,
+        #                 'joint_r_6': 40.}  # [N*m/rad]
+        # damping = { 'joint_l_1': 3., 'joint_l_2': 3.,
+        #                 'joint_l_3': 6., 'joint_l_4': 6., 'joint_l_5': 6.,
+        #                 'joint_l_6': 1.,'joint_r_1': 3.0, 'joint_r_2': 3.0,
+        #                 'joint_r_3': 6., 'joint_r_4': 6., 'joint_r_5': 6.,
+        #                 'joint_r_6': 1.}  # [N*m*s/rad]     # [N*m*s/rad]
+        
+        stiffness = {   'joint_l_1': 3000000.0, 'joint_l_2': 3000000.0,
+                        'joint_l_3': 3000000., 'joint_l_4': 3000000., 'joint_l_5': 3000000.,
+                        'joint_l_6': 3000000.,'joint_r_1': 3000000.0, 'joint_r_2': 3000000.0,
+                        'joint_r_3': 3000000., 'joint_r_4': 3000000., 'joint_r_5': 3000000.,
+                        'joint_r_6': 3000000.}  # [N*m/rad]
+        damping = { 'joint_l_1': 10000., 'joint_l_2': 10000.,
+                        'joint_l_3': 10000., 'joint_l_4': 10000., 'joint_l_5': 10000.,
+                        'joint_l_6': 10000.,'joint_r_1': 10000.0, 'joint_r_2': 10000.0,
+                        'joint_r_3': 10000., 'joint_r_4': 10000., 'joint_r_5': 10000.,
+                        'joint_r_6': 10000.} 
+        
+
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.5
         # decimation: Number of control action updates @ sim DT per policy DT
