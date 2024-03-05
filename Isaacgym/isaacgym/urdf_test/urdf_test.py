@@ -86,7 +86,7 @@ class urdfTest(BaseTask):
             self.envs.append(env)
             initial_pose = gymapi.Transform()
             #initial_pose.p = gymapi.Vec3(0.0, 0, 0.973)  #每个actor加入时的位置
-            initial_pose.p = gymapi.Vec3(0.0, 0, 1.973)
+            initial_pose.p = gymapi.Vec3(0.0, 0, 0.973)
             #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
             #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
             #为每一个环境添加对象
@@ -152,7 +152,7 @@ class urdfTest(BaseTask):
             self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
 
         dt = 0
-        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/isaacgym/urdf_test/giat/gait/gait.txt', delimiter='\t',dtype=np.float32)
+        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/isaacgym/urdf_test/giat/gait_拿书/gait.txt', delimiter='\t',dtype=np.float32)
         gait = gait/360*2*math.pi
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
