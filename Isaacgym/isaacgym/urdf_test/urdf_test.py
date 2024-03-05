@@ -86,7 +86,7 @@ class urdfTest(BaseTask):
             self.envs.append(env)
             initial_pose = gymapi.Transform()
             #initial_pose.p = gymapi.Vec3(0.0, 0, 0.973)  #每个actor加入时的位置
-            initial_pose.p = gymapi.Vec3(0.0, 0, 0.973)
+            initial_pose.p = gymapi.Vec3(0.0, 0, 1.973)
             #initial_pose.r = gymapi.Quat(-0.707107, 0, 0, 0.707107) #四元组位姿，因为isaacgym是基于y轴向上设计的，因此导入z轴向上的模型时需要进行旋转
             #initial_pose.r = gymapi.Quat(1, 0, 0, 0)
             #为每一个环境添加对象
