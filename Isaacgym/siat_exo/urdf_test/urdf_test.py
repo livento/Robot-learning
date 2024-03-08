@@ -1,16 +1,16 @@
-from isaacgym import gymapi
-import random
-import os
-from isaacgym import gymutil, gymtorch
-import math
+from isaacgym import gymapi,gymutil, gymtorch
 import numpy as np
-from function import print_asset_info, print_actor_info
-import time
 import torch
+import random
+import os,sys,math
 
 from urdf_config import urdfCfg
 from base_task import BaseTask
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
+from siat_exo.function.print import print_asset_info,print_actor_info
+from siat_exo.function.math import plus
 
 class urdfTest(BaseTask):
     def __init__(self,cfg:urdfCfg):
@@ -108,30 +108,45 @@ class urdfTest(BaseTask):
         self.gym.destroy_sim(self.sim)
 
     def test_dof(self):
-        num_dofs = self.gym.get_asset_dof_count(self.asset)
-        dof_states = np.zeros(num_dofs, dtype=gymapi.DofState.dtype)
-        dof_positions = dof_states['pos']
-        for i in range(num_dofs):
-            dof_positions[i] = 0
+        dof_props = self.gym.get_asset_dof_properties(self.asset)
+        dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
+        # dof_props["stiffness"][:11].fill(3000000.0)
+        # dof_props["damping"][:11].fill(10000.0)
+
+        dof_props["stiffness"][:12]=self.p_gains
+        dof_props["damping"][:12]=self.d_gains
+        
+        self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
+        self.default_dof_state["pos"] = self.default_dof_pos
+
+
+        pos_action = np.array([9.429290711205931e-06, -1.9255393224894898e-07, -0.24703514144463465, 0.5193653728958351, -0.27231875950843093, 2.95975774717566e-07, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                              dtype=np.float32)
+
+        pos_action = torch.from_numpy(pos_action)
+        for i in range(self.num_envs):
+            self.gym.set_actor_dof_properties(self.envs[i], self.actor_handles[i],dof_props )
+
+            self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], self.default_dof_pos, gymapi.STATE_ALL)
+
+            self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
+
+
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
-            #休眠0.5s
-            #time.sleep(1)
             self.gym.simulate(self.sim)
             self.gym.fetch_results(self.sim, True)
-            for i in range(self.num_envs):
-                self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], dof_states, gymapi.STATE_ALL)
+            self.gym.refresh_dof_state_tensor(self.sim)
+            self.gym.set_dof_position_target_tensor(self.sim, gymtorch.unwrap_tensor(pos_action))
+
             self.gym.step_graphics(self.sim)
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
-            #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
+            print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
     def test_stand(self):
         dof_props = self.gym.get_asset_dof_properties(self.asset)
         dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
-        
-
-
         # dof_props["stiffness"][:11].fill(3000000.0)
         # dof_props["damping"][:11].fill(10000.0)
 
@@ -308,4 +323,4 @@ class urdfTest(BaseTask):
 if __name__ == '__main__':
     cfg = urdfCfg()
     urdf = urdfTest(cfg=cfg)
-    urdf.test_stand()
+    urdf.test_dof()
