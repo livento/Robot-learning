@@ -22,7 +22,7 @@ class urdfCfg(BaseConfig):
 
     #定义asset参数
     class asset:
-        asset_root = "/home/leovento/Robot-learning/urdf"
+        #asset_root = "/home/leovento/Robot-learning/urdf"
         #asset_file = "zongzhuangURDF5/urdf/zongzhuangURDF5.urdf"
         #asset_file = "zongzhuangURDF5_test/urdf/zongzhuangURDF5.urdf"
         #asset_file = "box/urdf/box.urdf"

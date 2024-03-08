@@ -64,10 +64,11 @@ class urdfTest(BaseTask):
         self.create_camera_done = True
 
     def load_asset(self):
+        self.asset_root=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))),'urdf')
         self.asset_options = gymapi.AssetOptions()
         self.asset_options.fix_base_link = self.cfg.asset.fix_base_link
         self.asset_options.default_dof_drive_mode = self.cfg.asset.default_dof_drive_mode
-        self.asset = self.gym.load_asset(self.sim, self.cfg.asset.asset_root, self.cfg.asset.asset_file,self.asset_options)
+        self.asset = self.gym.load_asset(self.sim, self.asset_root, self.cfg.asset.asset_file,self.asset_options)
         self.asset_names = ['SIAT']
         self.load_asset_done = True
 
@@ -167,7 +168,7 @@ class urdfTest(BaseTask):
             self.gym.step_graphics(self.sim)
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
-            #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
+            print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
     # def test_torque_control(self):
     #     self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
