@@ -45,7 +45,7 @@
     </collision>
   </link>
   <link
-    name="r_1">
+    name="ar_1">
     <inertial>
       <origin
         xyz="0.079905 -0.0081434 0.026887"
@@ -76,7 +76,7 @@
     </visual>
   </link>
   <joint
-    name="joint_r_1"
+    name="joint_ar_1"
     type="revolute">
     <origin
       xyz="0 0.105 0"
@@ -84,7 +84,7 @@
     <parent
       link="base_link" />
     <child
-      link="r_1" />
+      link="ar_1" />
     <axis
       xyz="0 0 1" />
     <limit
@@ -94,7 +94,7 @@
       velocity="40" />
   </joint>
   <link
-    name="r_2">
+    name="ar_2">
     <inertial>
       <origin
         xyz="0.11644 0.0055321 0.028381"
@@ -126,15 +126,15 @@
 
   </link>
   <joint
-    name="joint_r_2"
+    name="joint_ar_2"
     type="revolute">
     <origin
       xyz="0.159 0 0"
       rpy="-1.5708 -1.5708 0" />
     <parent
-      link="r_1" />
+      link="ar_1" />
     <child
-      link="r_2" />
+      link="ar_2" />
     <axis
       xyz="0 0 1" />
     <limit
@@ -144,7 +144,7 @@
       velocity="40" />
   </joint>
   <link
-    name="r_3">
+    name="ar_3">
     <inertial>
       <origin
         xyz="0.22207 0.00020696 -0.026349"
@@ -176,15 +176,15 @@
 
   </link>
   <joint
-    name="joint_r_3"
+    name="joint_ar_3"
     type="revolute">
     <origin
       xyz="0.205 0 0"
       rpy="-1.5708 1.5708 0" />
     <parent
-      link="r_2" />
+      link="ar_2" />
     <child
-      link="r_3" />
+      link="ar_3" />
     <axis
       xyz="0 0 1" />
     <limit
@@ -194,7 +194,7 @@
       velocity="40" />
   </joint>
   <link
-    name="r_4">
+    name="ar_4">
     <inertial>
       <origin
         xyz="0.12085 0.011457 -0.024406"
@@ -226,15 +226,15 @@
 
   </link>
   <joint
-    name="joint_r_4"
+    name="joint_ar_4"
     type="revolute">
     <origin
       xyz="0.44 0 0"
       rpy="0 0 0" />
     <parent
-      link="r_3" />
+      link="ar_3" />
     <child
-      link="r_4" />
+      link="ar_4" />
     <axis
       xyz="0 0 1" />
     <limit
@@ -244,7 +244,7 @@
       velocity="40" />
   </joint>
   <link
-    name="r_5">
+    name="ar_5">
     <inertial>
       <origin
         xyz="-0.000208 -0.015363 -0.011661"
@@ -276,15 +276,15 @@
 
   </link>
   <joint
-    name="joint_r_5"
+    name="joint_ar_5"
     type="revolute">
     <origin
       xyz="0.4 0 0"
       rpy="0 0 0" />
     <parent
-      link="r_4" />
+      link="ar_4" />
     <child
-      link="r_5" />
+      link="ar_5" />
     <axis
       xyz="0 0 1" />
     <limit
@@ -294,7 +294,7 @@
       velocity="40" />
   </joint>
   <link
-    name="r_6">
+    name="ar_6">
     <inertial>
       <origin
         xyz="0.094957 -0.049767 0.038082"
@@ -334,15 +334,15 @@
     </collision>
   </link>
   <joint
-    name="joint_r_6"
+    name="joint_ar_6"
     type="revolute">
     <origin
       xyz="0 0 -0.0275"
       rpy="1.5708 0 0" />
     <parent
-      link="r_5" />
+      link="ar_5" />
     <child
-      link="r_6" />
+      link="ar_6" />
     <axis
       xyz="0 0 1" />
     <limit

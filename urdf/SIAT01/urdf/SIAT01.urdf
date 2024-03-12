@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="SIAT01">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.12283 0.0054798 0.19053"
+        rpy="0 0 0" />
+      <mass
+        value="11.483" />
+      <inertia
+        ixx="0.10681"
+        ixy="-0.007053"
+        ixz="-0.00047763"
+        iyy="0.1025"
+        iyz="6.0356E-05"
+        izz="0.12332" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="ar_1">
+    <inertial>
+      <origin
+        xyz="0.079905 -0.0081434 0.026887"
+        rpy="0 0 0" />
+      <mass
+        value="2.8322" />
+      <inertia
+        ixx="0.0025127"
+        ixy="0.00039573"
+        ixz="-7.1211E-05"
+        iyy="0.0065445"
+        iyz="-5.6669E-05"
+        izz="0.0072351" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.5451 0.61569 0.85882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_ar_1"
+    type="revolute">
+    <origin
+      xyz="0 0.105 0"
+      rpy="1.5708 0 1.5708" />
+    <parent
+      link="base_link" />
+    <child
+      link="ar_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.52"
+      upper="0.70"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="ar_2">
+    <inertial>
+      <origin
+        xyz="0.0055321 -0.11644 0.028381"
+        rpy="0 0 0" />
+      <mass
+        value="4.2266" />
+      <inertia
+        ixx="0.012089"
+        ixy="-7.1351E-05"
+        ixz="-2.3903E-05"
+        iyy="0.0044533"
+        iyz="8.8635E-05"
+        izz="0.012074" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.92941 0.76863 0.67059 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_ar_2"
+    type="revolute">
+    <origin
+      xyz="0.159 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="ar_1" />
+    <child
+      link="ar_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.38"
+      upper="0.52"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="ar_3">
+    <inertial>
+      <origin
+        xyz="-0.00020696 0.22207 -0.026349"
+        rpy="0 0 0" />
+      <mass
+        value="11.84" />
+      <inertia
+        ixx="0.1909"
+        ixy="0.00099269"
+        ixz="-0.00030176"
+        iyy="0.014461"
+        iyz="-0.0049046"
+        izz="0.20128" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.8902 0.71765 0.58824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_ar_3"
+    type="revolute">
+    <origin
+      xyz="0 -0.205 0"
+      rpy="-1.5708 0 -1.5708" />
+    <parent
+      link="ar_2" />
+    <child
+      link="ar_3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.70"
+      upper="0.26"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="ar_4">
+    <inertial>
+      <origin
+        xyz="-0.011457 0.12085 -0.024406"
+        rpy="0 0 0" />
+      <mass
+        value="3.321" />
+      <inertia
+        ixx="0.013003"
+        ixy="0.00041011"
+        ixz="7.9616E-05"
+        iyy="0.0027063"
+        iyz="-0.00092136"
+        izz="0.012137" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_ar_4"
+    type="revolute">
+    <origin
+      xyz="0 0.44 0"
+      rpy="0 0 0" />
+    <parent
+      link="ar_3" />
+    <child
+      link="ar_4" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.052"
+      upper="1.22"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="ar_5">
+    <inertial>
+      <origin
+        xyz="0.015363 -0.00020794 -0.011661"
+        rpy="0 0 0" />
+      <mass
+        value="0.11725" />
+      <inertia
+        ixx="2.1488E-05"
+        ixy="-3.6546E-10"
+        ixz="-7.9615E-16"
+        iyy="3.2429E-05"
+        iyz="6.8398E-11"
+        izz="2.1496E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.92157 0.88235 0.64314 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_5.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_ar_5"
+    type="revolute">
+    <origin
+      xyz="0 0.4 0"
+      rpy="0 0 0" />
+    <parent
+      link="ar_4" />
+    <child
+      link="ar_5" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.63"
+      upper="0.70"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="ar_6">
+    <inertial>
+      <origin
+        xyz="-0.094957 0.049767 0.038082"
+        rpy="0 0 0" />
+      <mass
+        value="1.4525" />
+      <inertia
+        ixx="0.0098192"
+        ixy="7.9321E-05"
+        ixz="2.2112E-05"
+        iyy="0.0068454"
+        iyz="-0.0002905"
+        izz="0.0033135" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_6.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/r_6.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_ar_6"
+    type="revolute">
+    <origin
+      xyz="0 0 -0.0275"
+      rpy="-1.5708 0 -1.5708" />
+    <parent
+      link="ar_5" />
+    <child
+      link="ar_6" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.44"
+      upper="0.35"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="l_1">
+    <inertial>
+      <origin
+        xyz="-0.08002 -0.0081433 0.026963"
+        rpy="0 0 0" />
+      <mass
+        value="2.8322" />
+      <inertia
+        ixx="0.0025118"
+        ixy="-0.00039481"
+        ixz="7.0805E-05"
+        iyy="0.0065445"
+        iyz="-5.728E-05"
+        izz="0.007236" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.5451 0.61569 0.85882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_l_1"
+    type="revolute">
+    <origin
+      xyz="0 -0.105 0"
+      rpy="1.5708 0 1.5708" />
+    <parent
+      link="base_link" />
+    <child
+      link="l_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.70"
+      upper="0.52"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="l_2">
+    <inertial>
+      <origin
+        xyz="-0.0055321 -0.11644 0.028383"
+        rpy="0 0 0" />
+      <mass
+        value="4.2266" />
+      <inertia
+        ixx="0.012089"
+        ixy="7.2688E-05"
+        ixz="2.2164E-05"
+        iyy="0.0044012"
+        iyz="0.00010249"
+        izz="0.012126" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.64706 0.61961 0.58824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_l_2"
+    type="revolute">
+    <origin
+      xyz="-0.159 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="l_1" />
+    <child
+      link="l_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.52"
+      upper="0.38"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="l_3">
+    <inertial>
+      <origin
+        xyz="-0.00017641 0.22192 0.030643"
+        rpy="0 0 0" />
+      <mass
+        value="11.835" />
+      <inertia
+        ixx="0.19094"
+        ixy="0.00098286"
+        ixz="0.00029818"
+        iyy="0.014422"
+        iyz="0.0049082"
+        izz="0.20127" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.8902 0.71765 0.58824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_l_3"
+    type="revolute">
+    <origin
+      xyz="-0.0042446 -0.205 0"
+      rpy="-1.5708 0 -1.5708" />
+    <parent
+      link="l_2" />
+    <child
+      link="l_3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.70"
+      upper="0.26"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="l_4">
+    <inertial>
+      <origin
+        xyz="-0.011268 0.12027 0.028835"
+        rpy="0 0 0" />
+      <mass
+        value="3.3252" />
+      <inertia
+        ixx="0.013004"
+        ixy="0.00041124"
+        ixz="-7.962E-05"
+        iyy="0.0027061"
+        iyz="0.00092324"
+        izz="0.012137" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.64706 0.61961 0.58824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_l_4"
+    type="revolute">
+    <origin
+      xyz="0 0.44 0"
+      rpy="0 0 0" />
+    <parent
+      link="l_3" />
+    <child
+      link="l_4" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.052"
+      upper="1.22"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="l_5">
+    <inertial>
+      <origin
+        xyz="0.015497 -6.4804E-11 0.016136"
+        rpy="0 0 0" />
+      <mass
+        value="0.11805" />
+      <inertia
+        ixx="2.1552E-05"
+        ixy="3.133E-10"
+        ixz="1.5081E-15"
+        iyy="3.2455E-05"
+        iyz="3.7122E-10"
+        izz="2.1516E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75686 0.76863 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_5.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_l_5"
+    type="revolute">
+    <origin
+      xyz="0 0.4 0"
+      rpy="0 0 0" />
+    <parent
+      link="l_4" />
+    <child
+      link="l_5" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.63"
+      upper="0.70"
+      effort="500"
+      velocity="1" />
+  </joint>
+  <link
+    name="l_6">
+    <inertial>
+      <origin
+        xyz="-0.094974 -0.049726 0.038045"
+        rpy="0 0 0" />
+      <mass
+        value="1.4527" />
+      <inertia
+        ixx="0.0098206"
+        ixy="-7.9121E-05"
+        ixz="2.2749E-05"
+        iyy="0.006844"
+        iyz="0.00029087"
+        izz="0.003315" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_6.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://SIAT01/meshes/l_6.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_l_6"
+    type="revolute">
+    <origin
+      xyz="0 0 0.031745"
+      rpy="-1.5708 0 -1.5708" />
+    <parent
+      link="l_5" />
+    <child
+      link="l_6" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.35"
+      upper="0.44"
+      effort="500"
+      velocity="1" />
+  </joint>
+</robot>

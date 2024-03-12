@@ -182,6 +182,48 @@ class urdfTest(BaseTask):
             self.gym.sync_frame_time(self.sim)
             print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
+
+    def test_walk(self):
+        dof_props = self.gym.get_asset_dof_properties(self.asset)
+        dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
+        # dof_props["stiffness"][:11].fill(3000000.0)
+        # dof_props["damping"][:11].fill(10000.0)
+        dof_props["stiffness"][:12]=self.p_gains
+        dof_props["damping"][:12]=self.d_gains
+        self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
+        self.default_dof_state["pos"] = self.default_dof_pos
+
+
+
+
+        pos_action = torch.zeros_like(self.dof_pos).squeeze(-1)
+        effort_action = torch.zeros_like(pos_action)
+
+        for i in range(self.num_envs):
+            self.gym.set_actor_dof_properties(self.envs[i], self.actor_handles[i],dof_props )
+
+            self.gym.set_actor_dof_states(self.envs[i], self.actor_handles[i], self.default_dof_pos, gymapi.STATE_ALL)
+
+            self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
+
+        dt = 0
+        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/giat/gait_拿书/gait.txt', delimiter='\t',dtype=np.float32)
+        gait = gait/360*2*math.pi
+        while not self.gym.query_viewer_has_closed(self.viewer):
+            # step the physics
+            self.gym.simulate(self.sim)
+            self.gym.fetch_results(self.sim, True)
+            self.gym.refresh_dof_state_tensor(self.sim)
+
+            pos_action = torch.from_numpy(gait[dt])
+            self.gym.set_dof_position_target_tensor(self.sim, gymtorch.unwrap_tensor(pos_action))
+            dt = dt+1
+
+            self.gym.step_graphics(self.sim)
+            self.gym.draw_viewer(self.viewer, self.sim, True)
+            self.gym.sync_frame_time(self.sim)
+            print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
+
     # def test_torque_control(self):
     #     self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
     #     self.default_dof_state["pos"] = self.default_dof_pos
@@ -327,5 +369,6 @@ if __name__ == '__main__':
              'rot':np.array([5.0000906e-01, 5.0000226e-01,  4.9999955e-01, 0.49998942])}  
     R_foot = {'pos':np.array([2.0499279e-01,  2.3648977e-01, 1.1609977]),
              'rot':np.array([-0, 0.70711362, 0, 0.7071001])}
-    p=inverse_kinematics(base,R_foot,L_foot)
+    #p=inverse_kinematics(base,R_foot,L_foot)
+    p=np.zeros(12,dtype=np.float32)
     urdf.test_dof(pos_action=p)
