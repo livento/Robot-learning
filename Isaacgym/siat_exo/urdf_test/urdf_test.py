@@ -10,7 +10,8 @@ from base_task import BaseTask
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(BASE_DIR)
 from siat_exo.function.print import print_asset_info,print_actor_info
-from siat_exo.function.math import plus
+from siat_exo.function.inverse_kinematics import inverse_kinematics
+
 
 class urdfTest(BaseTask):
     def __init__(self,cfg:urdfCfg):
@@ -107,7 +108,7 @@ class urdfTest(BaseTask):
         self.gym.destroy_viewer(self.viewer)
         self.gym.destroy_sim(self.sim)
 
-    def test_dof(self):
+    def test_dof(self,pos_action):
         dof_props = self.gym.get_asset_dof_properties(self.asset)
         dof_props["driveMode"][:11].fill(gymapi.DOF_MODE_POS)
         # dof_props["stiffness"][:11].fill(3000000.0)
@@ -118,10 +119,6 @@ class urdfTest(BaseTask):
         
         self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
         self.default_dof_state["pos"] = self.default_dof_pos
-
-
-        pos_action = np.array([9.429290711205931e-06, -1.9255393224894898e-07, -0.24703514144463465, 0.5193653728958351, -0.27231875950843093, 2.95975774717566e-07, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                              dtype=np.float32)
 
         pos_action = torch.from_numpy(pos_action)
         for i in range(self.num_envs):
@@ -168,7 +165,7 @@ class urdfTest(BaseTask):
             self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
 
         dt = 0
-        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/isaacgym/urdf_test/giat/gait_拿书/gait.txt', delimiter='\t',dtype=np.float32)
+        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/giat/gait_拿书/gait.txt', delimiter='\t',dtype=np.float32)
         gait = gait/360*2*math.pi
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
@@ -323,4 +320,12 @@ class urdfTest(BaseTask):
 if __name__ == '__main__':
     cfg = urdfCfg()
     urdf = urdfTest(cfg=cfg)
-    urdf.test_dof()
+    #urdf.test_stand()
+    base =   {'pos':np.array([-8.9406967e-08,  1.2572855e-08, 1.973]),
+             'rot':np.array([0,0,0,1])}
+    L_foot = {'pos':np.array([0.20499277, -0.23648897, 1.160998]),
+             'rot':np.array([5.0000906e-01, 5.0000226e-01,  4.9999955e-01, 0.49998942])}  
+    R_foot = {'pos':np.array([2.0499279e-01,  2.3648977e-01, 1.1609977]),
+             'rot':np.array([-0, 0.70711362, 0, 0.7071001])}
+    p=inverse_kinematics(base,R_foot,L_foot)
+    urdf.test_dof(pos_action=p)
