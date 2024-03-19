@@ -22,18 +22,11 @@ class urdfCfg(BaseConfig):
 
     #定义asset参数
     class asset:
-        #asset_root = "/home/leovento/Robot-learning/urdf"
-        #asset_file = "zongzhuangURDF5/urdf/zongzhuangURDF5.urdf"
-        #asset_file = "zongzhuangURDF5_test/urdf/zongzhuangURDF5.urdf"
-        #asset_file = "box/urdf/box.urdf"
-        #asset_file = "zongzhuangURDF6/urdf/zongzhuangURDF6.urdf"
-        #asset_file = "cassie/urdf/cassie.urdf"
-        #asset_file = "lm2/urdf/lm2.urdf"
         asset_file = "SIAT01/urdf/SIAT01.urdf"
-        #fix_base_link = False
-        fix_base_link = True
+        fix_base_link = False
+        #fix_base_link = True
         default_dof_drive_mode = 1
-
+        add_force_sensor = True
         
     #定义仿真器参数
     class sim_params:

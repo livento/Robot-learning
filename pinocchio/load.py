@@ -9,7 +9,7 @@ DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 pinocchio_model_dir = join(DIR, "urdf")
  
 # You should change here to set up your own URDF file or just pass it as an argument of this example.
-urdf_filename = pinocchio_model_dir + '/SIAT/SIAT.urdf' if len(argv)<2 else argv[1]
+urdf_filename = pinocchio_model_dir + '/SIAT01/urdf/SIAT01.urdf' if len(argv)<2 else argv[1]
  
 # Load the urdf model
 model    = pinocchio.buildModelFromUrdf(urdf_filename)
@@ -30,3 +30,5 @@ pinocchio.forwardKinematics(model,data,q)
 for name, oMi in zip(model.names, data.oMi):
     print(("{:<24} : {: .2f} {: .2f} {: .2f}"
           .format( name, *oMi.translation.T.flat )))
+
+pinocchio.cost.Mdes = pinocchio.se3.SE3(pinocchio.eye(3), np.array([0.2, 0, 0.1 + 1 / 100.]))  # Reference target at time 0.

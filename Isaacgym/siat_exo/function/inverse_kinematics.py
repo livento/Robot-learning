@@ -10,6 +10,9 @@ from siat_exo.function.math_function import joint_pr
 import os
 import pinocchio
 
+
+
+
 def inverse_kinematics(Base,R_foot,L_foot,joint_init=np.zeros(12,dtype=np.float32)):
     '''
     function:根据指定的Base link位姿以及左右脚的位姿利用逆运动学计算各关节的角度
@@ -22,15 +25,15 @@ def inverse_kinematics(Base,R_foot,L_foot,joint_init=np.zeros(12,dtype=np.float3
     '''
     DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
     pinocchio_model_dir = join(DIR, "urdf")
-    urdf_filename = pinocchio_model_dir + '/SIAT/SIAT.urdf' if len(argv)<2 else argv[1]
+    urdf_filename = pinocchio_model_dir + '/SIAT01/urdf/SIAT01.urdf' if len(argv)<2 else argv[1]
     model    = pinocchio.buildModelFromUrdf(urdf_filename)
     data  = model.createData()
 
     state_R = joint_pr(Base,R_foot)
     state_L = joint_pr(Base,L_foot)
     
-    JOINT_ID_R = 12
-    JOINT_ID_L = 6
+    JOINT_ID_R = 6
+    JOINT_ID_L = 12
     
     oMdes_R = pinocchio.SE3(state_R['rot'], state_R['pos'])
     oMdes_L = pinocchio.SE3(state_L['rot'], state_L['pos'])
@@ -38,11 +41,12 @@ def inverse_kinematics(Base,R_foot,L_foot,joint_init=np.zeros(12,dtype=np.float3
     #q      = pinocchio.neutral(model)
     q      = joint_init
     eps    = 1e-4
-    IT_MAX = 1000
+    IT_MAX = 2000
     DT     = 1e-2          #时间步长
     damp   = 1e-12         #求伪逆的阻尼量
     
     i=0
+
     while True:
         pinocchio.forwardKinematics(model,data,q)
         iMd_R = data.oMi[JOINT_ID_R].actInv(oMdes_R)
@@ -50,7 +54,7 @@ def inverse_kinematics(Base,R_foot,L_foot,joint_init=np.zeros(12,dtype=np.float3
         err_R = pinocchio.log(iMd_R).vector  # in joint frame
         err_L = pinocchio.log(iMd_L).vector
         err = err_L+err_R
-        if norm(err_L) < eps:
+        if norm(err) < eps:
             success = True
             break
         if i >= IT_MAX:
@@ -71,24 +75,41 @@ def inverse_kinematics(Base,R_foot,L_foot,joint_init=np.zeros(12,dtype=np.float3
 
         #伪逆
         v_L = - J_L.T.dot(solve(J_L.dot(J_L.T) + damp * np.eye(6), err_L))
-        q = pinocchio.integrate(model,q,v_L*DT).astype(np.float32)
+        q = pinocchio.integrate(model,q,v_L*DT)
 
         i += 1
-    
+            
     if success:
-        return q
+        return q.astype(np.float32)
     else:
         return joint_init
+        
 
 if __name__=='__main__':
-    base =   {'pos':np.array([-8.9406967e-08,  1.2572855e-08, 1.973]),
+    import time
+    from tqdm import trange
+    trajectory = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/trajectory/trajectory.txt', delimiter=',',dtype=np.float32)
+    COM   = trajectory[:,6:9]
+    R_pos = trajectory[:,:3]
+    L_pos = trajectory[:,3:6]
+        
+    Base =   {'pos':np.array([0,0,0]),
              'rot':np.array([0,0,0,1])}
-    R_foot = {'pos':np.array([2.0499279e-01,  2.3648977e-01, 1.1609977]),
-             'rot':np.array([-4.6543719e-06, 7.0711362e-01, -4.0698797e-06, 0.7071001])}
-    L_foot = {'pos':np.array([0.20499277, -0.23648897, 1.160998]),
-             'rot':np.array([5.0000906e-01, 5.0000226e-01,  4.9999955e-01, 0.49998942])}   
-    
-
-    q=inverse_kinematics(base,R_foot,L_foot)
-    pos = q.flatten().tolist()
-    print('\nresult: %s' % q.flatten().tolist())
+    R_foot = {'pos':np.array([0,0,0]),
+             'rot':np.array([-7.0710993e-01,  0, -7.0710385e-01,  0])}  
+    L_foot = {'pos':np.array([0,0,0]),
+             'rot':np.array([-7.0710981e-01,  0, -7.0710391e-01,  0])}
+    t = 0
+    gait = []
+    p_r = np.zeros(12,dtype=np.float32)
+    start_time = time.time()
+    for t in trange(trajectory.shape[0]):
+        Base['pos']=COM[t,:]
+        R_foot['pos'] = R_pos[t,:]
+        L_foot['pos'] = L_pos[t,:] 
+        p=inverse_kinematics(Base,R_foot,L_foot,joint_init=p_r)
+        t=t+1
+        p_r = p
+        gait.append(p)
+    np.savetxt('gait.txt', gait, fmt='%f')
+    #pos = q.flatten().tolist()
