@@ -26,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/base_link.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/base_link.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -66,7 +66,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_1.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_1.STL" />
       </geometry>
       <material
         name="">
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_1.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_1.STL" />
       </geometry>
     </collision>
   </link>
@@ -124,7 +124,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_2.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_2.STL" />
       </geometry>
       <material
         name="">
@@ -138,7 +138,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_2.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_2.STL" />
       </geometry>
     </collision>
   </link>
@@ -182,7 +182,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_3.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_3.STL" />
       </geometry>
       <material
         name="">
@@ -196,7 +196,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_3.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_3.STL" />
       </geometry>
     </collision>
   </link>
@@ -240,7 +240,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_4.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_4.STL" />
       </geometry>
       <material
         name="">
@@ -254,7 +254,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_4.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_4.STL" />
       </geometry>
     </collision>
   </link>
@@ -298,7 +298,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_5.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_5.STL" />
       </geometry>
       <material
         name="">
@@ -312,7 +312,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_5.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_5.STL" />
       </geometry>
     </collision>
   </link>
@@ -356,7 +356,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_6.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_6.STL" />
       </geometry>
       <material
         name="">
@@ -370,7 +370,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/r_6.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/r_6.STL" />
       </geometry>
     </collision>
   </link>
@@ -414,7 +414,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_1.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_1.STL" />
       </geometry>
       <material
         name="">
@@ -428,7 +428,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_1.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_1.STL" />
       </geometry>
     </collision>
   </link>
@@ -472,7 +472,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_2.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_2.STL" />
       </geometry>
       <material
         name="">
@@ -486,7 +486,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_2.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_2.STL" />
       </geometry>
     </collision>
   </link>
@@ -530,7 +530,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_3.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_3.STL" />
       </geometry>
       <material
         name="">
@@ -544,7 +544,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_3.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_3.STL" />
       </geometry>
     </collision>
   </link>
@@ -588,7 +588,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_4.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_4.STL" />
       </geometry>
       <material
         name="">
@@ -602,7 +602,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_4.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_4.STL" />
       </geometry>
     </collision>
   </link>
@@ -646,7 +646,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_5.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_5.STL" />
       </geometry>
       <material
         name="">
@@ -660,7 +660,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_5.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_5.STL" />
       </geometry>
     </collision>
   </link>
@@ -704,7 +704,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_6.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_6.STL" />
       </geometry>
       <material
         name="">
@@ -718,7 +718,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://SIAT01/meshes/l_6.STL" />
+          filename="/home/leovento/Robot-learning/urdf/SIAT01/meshes/l_6.STL" />
       </geometry>
     </collision>
   </link>

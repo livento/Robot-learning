@@ -18,7 +18,7 @@ def quaternion2rotation(Q):
 
 def joint_pr(Base,Link):
     '''
-    世界坐标系位姿转为joint坐标系位姿
+    世界坐标系位姿转为浮动基坐标系位姿
     '''
 
     state = {'pos':np.zeros(3),

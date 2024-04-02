@@ -1,70 +1,82 @@
-from __future__ import print_function
-import numpy as np
-from numpy.linalg import norm, solve
-from sys import argv
-from os.path import dirname, join, abspath
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2022 Stéphane Caron
+# Copyright 2024 Inria
+
+"""Example of differential IK stuck in a local minimum.
+
+We set up a simple pendulum with joint limits (0, 2 * pi) radians. That is,
+joint angles have to be positive, but the joint can do a full turn. We then
+define the goal configuration with an angle of 5.5 rad, and initialize the
+robot at joint angle 0.5 rad. We task the pendulum with moving its tip to the
+tip-position of the goal configuration.
+
+Because differential IK is a local (think "greedy") algorithm, it will move the
+tip on the shortest path to target by turning the pendulum clockwise. This will
+locally improve the task error, but eventually the pendulum will just get stuck
+at its configuration limit (joint angle = 0 rad). At this stage, differential
+IK will just keep pushing against the constraint, which is locally the least
+worst thing to do.
+
+The global solution would be to accept a temporary increase in the "current tip
+to goal tip" distance, and make the pendulum turn anti-clockwise.
+"""
+
 import os
 
-import pinocchio
+import numpy as np
+import pinocchio as pin
+import qpsolvers
+from loop_rate_limiters import RateLimiter
 
-def Trans(Q):
-    x = Q[0]
-    y = Q[1]
-    z = Q[2]
-    w = Q[3]
-    return np.array([[1-2*(y**2+z**2),  2*(x*y-z*w),       2*(x*z+y*w)],
-                     [2*(x*y+z*w),      1-2*(x**2+z**2),   2*(y*z-x*w)],
-                     [2*(x*z-y*w),      2*(y*z+x*w),       1-2*(x**2+y**2)]])
+import pink
+from pink import solve_ik
+from pink.tasks import FrameTask
+from pink.visualization import start_meshcat_visualizer
 
-def Trans_p(p_base,p_link):
-    return p_link-p_base
+qp_solver = qpsolvers.available_solvers[0]
+if "quadprog" in qpsolvers.available_solvers:
+    qp_solver = "quadprog"
 
-DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-pinocchio_model_dir = join(DIR, "urdf")
-urdf_filename = pinocchio_model_dir + '/SIAT/SIAT.urdf' if len(argv)<2 else argv[1]
 
-model    = pinocchio.buildModelFromUrdf(urdf_filename)
+if __name__ == "__main__":
+    # Load robot description from robots/simple_pendulum.urdf
+    robot = pin.RobotWrapper.BuildFromURDF(
+        filename='/home/leovento/Robot-learning/urdf/SIAT01/urdf/SIAT01.urdf',
+        package_dirs=["."],
+        root_joint=None,
+    )
 
-data  = model.createData()
+    # Initialize visualizer and frame task
 
-Q = np.array([5.0000906e-01, 5.0000226e-01,  4.9999955e-01, 0.49998942])
-r = Trans(Q)
-p_base = np.array([-8.9406967e-08,  1.2572855e-08, 1.973])
-p_link = np.array([0.20499277, -0.23648897, 1.160998])
-p = Trans_p(p_base,p_link)
-JOINT_ID = 6
-oMdes = pinocchio.SE3(r, p)
-  
-#q      = pinocchio.neutral(model)
-q      = np.array([0,0,0,0,0,0,0,0,0,0,0,0])
-eps    = 1e-4
-IT_MAX = 1000
-DT     = 1e-2
-damp   = 1e-12
-  
-i=0
-while True:
-    pinocchio.forwardKinematics(model,data,q)
-    iMd = data.oMi[JOINT_ID].actInv(oMdes)
-    err = pinocchio.log(iMd).vector  # in joint frame
-    if norm(err) < eps:
-        success = True
-        break
-    if i >= IT_MAX:
-        success = False
-        break
-    J = pinocchio.computeJointJacobian(model,data,q,JOINT_ID)  # in joint frame
-    J = -np.dot(pinocchio.Jlog6(iMd.inverse()), J)
-    v = - J.T.dot(solve(J.dot(J.T) + damp * np.eye(6), err))
-    q = pinocchio.integrate(model,q,v*DT)
-    if not i % 10:
-        print('%d: error = %s' % (i, err.T))
-    i += 1
-  
-if success:
-    print("Convergence achieved!")
-else:
-    print("\nWarning: the iterative algorithm has not reached convergence to the desired precision")
-  
-print('\nresult: %s' % q.flatten().tolist())
-print('\nfinal error: %s' % err.T)
+    model = robot.model
+    data = robot.data
+    task = FrameTask(
+        "tip",
+        position_cost=1.0,  # [cost] / [m]
+        orientation_cost=0.61,  # [cost] / [rad]
+    )
+    tasks = [task]
+
+    # Feasible goal configuration on one side of configuration limits
+    q_goal = np.array([5.5])
+
+    goal_configuration = pink.configuration.Configuration(model, data, q_goal)
+    goal_pose = goal_configuration.get_transform_frame_to_world("tip")
+
+    task.set_target_from_configuration(goal_configuration)  # <= task target
+
+    # Initial configuration on the other side of configuration limits
+    q_init = np.array([0.5])
+    configuration = pink.configuration.Configuration(model, data, q_init)
+    init_pose = configuration.get_transform_frame_to_world("tip")
+
+    # Run closed-loop inverse kinematics
+    rate = RateLimiter(frequency=100.0)
+    dt = rate.period
+    while True:
+        velocity = solve_ik(configuration, tasks, dt, solver=qp_solver)
+        configuration.integrate_inplace(velocity, dt)
+        rate.sleep()

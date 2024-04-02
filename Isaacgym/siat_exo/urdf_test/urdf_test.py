@@ -122,11 +122,11 @@ class urdfTest(BaseTask):
     def add_force(self):
         right_foot = self.gym.find_asset_rigid_body_index(self.asset, "ar_6")
         left_foot = self.gym.find_asset_rigid_body_index(self.asset, "l_6")
-        sensor_pose1 = gymapi.Transform(gymapi.Vec3(0.2, 0.0, 0.0))
-        sensor_pose2 = gymapi.Transform(gymapi.Vec3(-0.2, 0.0, 0.0))
+        sensor_pose1 = gymapi.Transform(gymapi.Vec3(0.0, 0.0, 0.0))
+        sensor_pose2 = gymapi.Transform(gymapi.Vec3(0.0, 0.0, 0.0))
 
         self.sensor_idx1 = self.gym.create_asset_force_sensor(self.asset, right_foot, sensor_pose1)
-        self.sensor_idx2 = self.gym.create_asset_force_sensor(self.asset, right_foot, sensor_pose2)
+        self.sensor_idx2 = self.gym.create_asset_force_sensor(self.asset, left_foot, sensor_pose2)
 
         # sensor_props = gymapi.ForceSensorProperties()
         # sensor_props.enable_forward_dynamics_forces = True
@@ -158,35 +158,42 @@ class urdfTest(BaseTask):
     def test_gait(self):
 
         dt = 0
-        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/giat/gait.txt', delimiter=' ',dtype=np.float32)
-        #gait = gait/360*2*math.pi
+        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0402_inter.txt', delimiter='\t',dtype=np.float32)
+        gait = gait
+
+        # min_values = np.amin(gait, axis=0)
+        # max_values = np.amax(gait, axis=0)
+
+        # print("每一列的最小值：", min_values)
+        # print("每一列的最大值：", max_values)
         right_positions = []
         left_positions = []
         base_positions = []
         for dt in trange(gait.shape[0]):
-            # step the physics
-            self.gym.simulate(self.sim)
-            self.gym.fetch_results(self.sim, True)
-            self.gym.refresh_dof_state_tensor(self.sim)
+            if not self.gym.query_viewer_has_closed(self.viewer):
+                # step the physics
+                self.gym.simulate(self.sim)
+                self.gym.fetch_results(self.sim, True)
+                self.gym.refresh_dof_state_tensor(self.sim)
 
-            pos_action = torch.from_numpy(gait[dt])
-            self.gym.set_dof_position_target_tensor(self.sim, gymtorch.unwrap_tensor(pos_action))
+                pos_action = torch.from_numpy(gait[dt])
+                self.gym.set_dof_position_target_tensor(self.sim, gymtorch.unwrap_tensor(pos_action))
 
-            self.gym.step_graphics(self.sim)
-            self.gym.draw_viewer(self.viewer, self.sim, True)
-            self.gym.sync_frame_time(self.sim)
-            body_states = self.gym.get_actor_rigid_body_states(
-                self.envs[0], self.actor_handles[0], gymapi.STATE_ALL)
-            body_positions = body_states['pose']['p']
-            r = body_positions[6].copy()
-            l = body_positions[12].copy()
-            b = body_positions[0].copy()
-            right_positions.append(r)
-            left_positions.append(l)
-            base_positions.append(b)
-        np.savetxt('right_positions.txt', right_positions, fmt='%f')
-        np.savetxt('left_positions.txt', left_positions, fmt='%f')
-        np.savetxt('base_positions.txt', base_positions, fmt='%f')
+                self.gym.step_graphics(self.sim)
+                self.gym.draw_viewer(self.viewer, self.sim, True)
+                self.gym.sync_frame_time(self.sim)
+                body_states = self.gym.get_actor_rigid_body_states(
+                    self.envs[0], self.actor_handles[0], gymapi.STATE_ALL)
+                body_positions = body_states['pose']['p']
+                r = body_positions[6].copy()
+                l = body_positions[12].copy()
+                b = body_positions[0].copy()
+                right_positions.append(r)
+                left_positions.append(l)
+                base_positions.append(b)
+        np.savetxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/position/right_positions.txt', right_positions, fmt='%f')
+        np.savetxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/position/left_positions.txt', left_positions, fmt='%f')
+        np.savetxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/position/base_positions.txt', base_positions, fmt='%f')
 
 
     def test_walk(self):  
@@ -221,17 +228,20 @@ class urdfTest(BaseTask):
             self.gym.step_graphics(self.sim)
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
-            print(p,dt)
             #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
 
     def test_force(self,pos_action):
 
         pos_action = torch.from_numpy(pos_action)
+        sensors = []
+        sensor_datas = []
+        
         if self.cfg.asset.add_force_sensor:
             num_sensors = self.gym.get_actor_force_sensor_count(self.envs[0], self.actor_handles[0])   
             for i in range(num_sensors):
                 sensor = self.gym.get_actor_force_sensor(self.envs[0], self.actor_handles[0], i)
-        
+                sensors.append(sensor)
+
         while not self.gym.query_viewer_has_closed(self.viewer):
             # step the physics
             self.gym.simulate(self.sim)
@@ -245,9 +255,10 @@ class urdfTest(BaseTask):
 
 
             if self.cfg.asset.add_force_sensor:
-                sensor_data = sensor.get_forces()
-
-                print(sensor_data.force)   # force as Vec3
+                for i in range(num_sensors):
+                    sensor_data = sensors[i].get_forces()
+                    sensor_datas.append(sensor_data.force)
+                   # force as Vec3
                 #print(sensor_data.torque) 
 
             #可视化
@@ -255,7 +266,7 @@ class urdfTest(BaseTask):
             self.gym.draw_viewer(self.viewer, self.sim, True)
             self.gym.sync_frame_time(self.sim)
             #print_actor_info(self.gym,self.envs[0],self.actor_handles[0])
-
+        np.savetxt('sensors.txt', sensor_datas, fmt='%s')
 
     # def test_torque_control(self):
     #     self.default_dof_state = np.zeros(self.num_dofs, gymapi.DofState.dtype)
