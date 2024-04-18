@@ -2,8 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from interpolate import gait_interpld
 # 读取文本文件
-data = np.genfromtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0402_inter.txt', delimiter='\t')  # 根据实际情况指定分隔符
-#data = np.genfromtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/giat/备份/gait.txt', delimiter='\t')  # 根据实际情况指定分隔符
+# data_1 = np.genfromtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0403.txt', delimiter=' ')  # 根据实际情况指定分隔符
+# data_2 = np.genfromtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0403_2.txt', delimiter=' ')
+# data = data_1 - data_2
+data = np.genfromtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0413.txt', delimiter=' ')
 #data = gait_interpld(data)/3.1415926*180
 data = data/3.1415926*180
 data_v = np.diff(data,axis=0)*1000*60/360
@@ -22,11 +24,11 @@ for i in range(num_cols):
     plt.ylabel('Value')
     plt.grid(True)
 
-
+plt.figure()
 #对每一列数据绘制曲线图，分别显示在不同的图窗中
 for i in range(num_cols):
-    plt.figure()
-    plt.plot(data_v[:, i])
+    
+    plt.plot(data_v[10:, i])
     plt.title(f'Column {i+1}')
     plt.xlabel('Index')
     plt.ylabel('Value')

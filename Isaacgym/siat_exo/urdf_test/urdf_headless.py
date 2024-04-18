@@ -166,7 +166,7 @@ class urdfTest(BaseTask):
             self.gym.set_actor_dof_position_targets(self.envs[i], self.actor_handles[i], self.default_dof_pos)
 
         dt = 0
-        trajectory = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/giat/gait.txt', delimiter=' ',dtype=np.float32)
+        trajectory = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0402_inter.txt', delimiter='\t',dtype=np.float32)
         right_positions = []
         left_positions = []
         base_positions = []

@@ -24,5 +24,6 @@ def joint_pr(Base,Link):
     state = {'pos':np.zeros(3),
              'rot':np.eye(3)}
     state['pos']= Link['pos']-Base['pos']
-    state['rot']= np.dot(quaternion2rotation(Base['rot']),quaternion2rotation(Link['rot']))
+    #state['rot']= np.dot(quaternion2rotation(Base['rot']),quaternion2rotation(Link['rot']))
+    state['rot']= np.array([[0,0,1],[0,-1,0],[1,0,0]])
     return state

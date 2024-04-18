@@ -158,7 +158,7 @@ class urdfTest(BaseTask):
     def test_gait(self):
 
         dt = 0
-        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0402_inter.txt', delimiter='\t',dtype=np.float32)
+        gait = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0403_2.txt', delimiter=' ',dtype=np.float32)
         gait = gait
 
         # min_values = np.amin(gait, axis=0)

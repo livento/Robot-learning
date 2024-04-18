@@ -23,8 +23,8 @@ class urdfCfg(BaseConfig):
     #定义asset参数
     class asset:
         asset_file = "SIAT01/urdf/SIAT01.urdf"
-        fix_base_link = False
-        #fix_base_link = True
+        #fix_base_link = False
+        fix_base_link = True
         default_dof_drive_mode = 1
         add_force_sensor = True
         

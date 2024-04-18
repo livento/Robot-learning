@@ -41,10 +41,10 @@ def inverse_kinematics(Base,R_foot,L_foot,joint_init=np.zeros(12,dtype=np.float6
     #q      = pinocchio.neutral(model)
     
     eps    = 4e-7
-    IT_MAX = 4000
-    DT     = 1     #时间步长
+    IT_MAX = 200
+    DT     = 1    #时间步长
     
-    damp   = 1e-12         #求DLS的阻尼量
+    damp   = 1e-6         #DLS的阻尼量
     q      = joint_init
 
     i=0
@@ -94,11 +94,39 @@ if __name__=='__main__':
     import time
     from tqdm import trange
     np.set_printoptions(precision=15)
-    trajectory = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/trajectory/trajectory_0401.txt', delimiter=',',dtype=np.float64)
+    trajectory = np.loadtxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/trajectory/trajectory_0413.txt', delimiter=',',dtype=np.float64)
     COM   = trajectory[:,6:9]
     R_pos = trajectory[:,:3]
     L_pos = trajectory[:,3:6]
 
+
+    # R_base = R_pos - COM
+    # L_base = L_pos - COM
+
+    # R_v = np.diff(R_base,axis=0)
+    # L_v = np.diff(L_base,axis=0)
+    # C_v = np.diff(COM,axis=0)
+    # plt.figure()
+#对每一列数据绘制曲线图，分别显示在不同的图窗中
+#     for i in range(3):
+    
+#         plt.plot(COM[:, i])
+#         plt.title(f'Column {i+1}')
+#         plt.xlabel('Index')
+#         plt.ylabel('Value')
+#         plt.grid(True)
+
+
+#     plt.figure()
+# #对每一列数据绘制曲线图，分别显示在不同的图窗中
+#     for i in range(3):
+    
+#         plt.plot(C_v[:, i])
+#         plt.title(f'Column {i+1}')
+#         plt.xlabel('Index')
+#         plt.ylabel('Value')
+#         plt.grid(True)
+#     plt.show()
     # data = np.genfromtxt('/home/leovento/Robot-learning/my_gait.txt', delimiter='\t')
     # data_v = np.diff(data)*1000
     # COM_v = np.diff(COM)*1000
@@ -131,19 +159,29 @@ if __name__=='__main__':
     t = 0
     gait = np.zeros(12,dtype=np.float64)
     p_r = np.zeros(12,dtype=np.float64)
-    d   =  np.full((12,), 0)
-    start_time = time.time()
+    # d   =  np.random.rand(12, 1)/1000
+    # start_time = time.time()
+    # for t in trange(trajectory.shape[0]):
+    # #for t in trange(25000):
+    #     if t  == 10000:
+    #         print(t)
+    #     Base['pos']=COM[t,:]
+    #     R_foot['pos'] = R_pos[t,:]
+    #     L_foot['pos'] = L_pos[t,:] 
+    #     p=inverse_kinematics(Base,R_foot,L_foot,joint_init=p_r)
+    #     t=t+1
+    #     p_r = p
+    #     gait = np.vstack((gait,p))
+
     for t in trange(trajectory.shape[0]):
-    #for t in trange(25000):
-        if t  == 10000:
-            print(t)
         Base['pos']=COM[t,:]
         R_foot['pos'] = R_pos[t,:]
         L_foot['pos'] = L_pos[t,:] 
         p=inverse_kinematics(Base,R_foot,L_foot,joint_init=p_r)
         t=t+1
+            #d   =  np.random.rand(12)/1000
         p_r = p
         gait = np.vstack((gait,p))
-    np.savetxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0402.txt', gait, fmt='%.14f')
-    #pos = q.flatten().tolist()
-    #np.savetxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0402.txt', gait)
+    np.savetxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0413.txt', gait, fmt='%.14f')
+    # #pos = q.flatten().tolist()
+    # #np.savetxt('/home/leovento/Robot-learning/Isaacgym/siat_exo/urdf_test/gait/gait_0402.txt', gait)
